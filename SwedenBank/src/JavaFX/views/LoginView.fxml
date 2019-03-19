@@ -9,9 +9,10 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
 <GridPane alignment="TOP_CENTER" hgap="10" prefHeight="400.0" prefWidth="600.0" vgap="10"
           xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="JavaFX.LoginController">
+          fx:controller="JavaFX.controllers.LoginController">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER"/>
         <ColumnConstraints/>
@@ -22,14 +23,16 @@
             <Insets left="20" right="20" top="20" bottom="50"/>
         </GridPane.margin>
     </Label>
-    <Label id="error" fx:id="PersonnummerErrorLabel" wrapText="true" GridPane.columnIndex="0"
-           GridPane.columnSpan="1" GridPane.rowIndex="1" text="" textFill="red">
+    <Label id="error" fx:id="personnummerErrorLabel" wrapText="true" GridPane.columnIndex="0"
+           GridPane.columnSpan="1" GridPane.rowIndex="1" text="Incorrect Personnumer" textFill="red"
+           visible="false">
         <GridPane.margin>
             <Insets left="20" right="20"/>
         </GridPane.margin>
     </Label>
-    <Label id="error" fx:id="PasswordErrorLabel" wrapText="true" GridPane.columnIndex="1"
-           GridPane.columnSpan="1" GridPane.rowIndex="1" text="" textFill="red">
+    <Label id="error" fx:id="passwordErrorLabel" wrapText="true" GridPane.columnIndex="1"
+           GridPane.columnSpan="1" GridPane.rowIndex="1" text="Password doesn't match" textFill="red"
+           visible="false">
         <GridPane.margin>
             <Insets left="20" right="20"/>
         </GridPane.margin>
@@ -46,11 +49,11 @@
             <Insets right="20"/>
         </GridPane.margin>
         <Label text="Password"/>
-        <TextField fx:id="passwordField"/>
+        <PasswordField fx:id="passwordField"/>
     </VBox>
 
-    <Button text="Log In" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="RIGHT"
-            GridPane.rowIndex="3">
+    <Button fx:id="loginButton" text="Log In" GridPane.columnIndex="0" GridPane.columnSpan="2"
+            GridPane.halignment="RIGHT" GridPane.rowIndex="3" onAction="#loginButtonPressed">
         <GridPane.margin>
             <Insets right="20"/>
         </GridPane.margin>

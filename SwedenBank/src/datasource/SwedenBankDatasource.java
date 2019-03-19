@@ -51,9 +51,15 @@ public class SwedenBankDatasource extends Datasource {
       }
 
       try {
+         queryUser.setString(1, personnummer);
+         queryUser.setString(2, password);
          ResultSet results = queryUser.executeQuery();
-         results.next();
-         return userObjectMapper.mapOne(results);
+         if (results.isBeforeFirst()) {
+            results.next();
+            return userObjectMapper.mapOne(results);
+         } else {
+            return null;
+         }
       } catch (SQLException e) {
          System.out.println("Couldn't query user: " + e.getMessage());
          return null;
