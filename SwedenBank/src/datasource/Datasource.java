@@ -62,12 +62,10 @@ public class Datasource {
             Column column = f.getAnnotation(Column.class);
 
             if (column != null) {
-               String name = column.value();
-               queryBegining.append(name + ", ");
-               values.append("?, ");
-               if (f.get(ob) == null) {
-                  valuesToInsert.add(null);
-               } else {
+               if (f.get(ob) != null) {
+                  String name = column.value();
+                  queryBegining.append(name + ", ");
+                  values.append("?, ");
                   valuesToInsert.add(f.get(ob).toString());
                }
             }

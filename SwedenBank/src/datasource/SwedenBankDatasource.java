@@ -1,11 +1,14 @@
 package datasource;
 
 import models.Address;
+import models.BankAccount;
 import models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SwedenBankDatasource extends Datasource {
 
@@ -13,11 +16,17 @@ public class SwedenBankDatasource extends Datasource {
 
    private final String QUERY_USER = "SELECT * FROM " + DBNames.TABLE_USERS +
            " WHERE " + DBNames.COLUMN_USERS_PERSON_NR + "=? AND " +
-           DBNames.COLUMN_USERS_PASSWORD + "=?";
+           DBNames.COLUMN_USERS_PASSWORD + " = ?";
+
+   private final String QUERY_ACCOUNTS_FOR_USER = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS +
+           " WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ?";
 
    private PreparedStatement queryUser;
+   private PreparedStatement queryAccountsForUser;
+
    private ObjectMapper<User> userObjectMapper;
    private ObjectMapper<Address> addressObjectMapper;
+   private ObjectMapper<BankAccount> accountObjectMapper;
 
    public static SwedenBankDatasource getInstance() {
       if (instance == null) {
@@ -29,6 +38,7 @@ public class SwedenBankDatasource extends Datasource {
    private SwedenBankDatasource() {
       userObjectMapper = new ObjectMapper<>(User.class);
       addressObjectMapper = new ObjectMapper<>(Address.class);
+      accountObjectMapper = new ObjectMapper<>(BankAccount.class);
    }
 
    @Override
@@ -36,13 +46,32 @@ public class SwedenBankDatasource extends Datasource {
       super.openConnection(connectionString, login, password);
       try {
          queryUser = conn.prepareStatement(QUERY_USER);
+         queryAccountsForUser = conn.prepareStatement(QUERY_ACCOUNTS_FOR_USER);
          return true;
       } catch (SQLException e) {
-         e.printStackTrace();
+         System.out.println("Couldn't open connection: " + e.getMessage());
          return false;
       }
    }
 
+   @Override
+   public boolean closeConnection() {
+      try {
+         super.closeConnection();
+         closeStatement(queryUser);
+         closeStatement(queryAccountsForUser);
+         return true;
+      } catch (SQLException e) {
+         System.out.println("Couldn't close connection");
+         return false;
+      }
+   }
+
+   private void closeStatement(PreparedStatement statement) throws SQLException {
+      if (statement != null) {
+         statement.close();
+      }
+   }
 
    public User QueryUser(String personnummer, String password) {
       if (queryUser == null) {
@@ -62,6 +91,19 @@ public class SwedenBankDatasource extends Datasource {
          }
       } catch (SQLException e) {
          System.out.println("Couldn't query user: " + e.getMessage());
+         return null;
+      }
+   }
+
+   public List<BankAccount> queryAccountsForUser(String personNummer) {
+      try {
+         queryAccountsForUser.setString(1, personNummer);
+         ResultSet results = queryAccountsForUser.executeQuery();
+         List<BankAccount> accounts = new ArrayList<>();
+         accounts = accountObjectMapper.map(results);
+         return accounts;
+      } catch (SQLException e) {
+         System.out.println("Couldn't query accounts: " + e.getMessage());
          return null;
       }
    }

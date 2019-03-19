@@ -36,8 +36,13 @@ public class InsertData {
 
       BankAccount account = new BankAccount();
 
+      account.setAccountNumber("11112222333344")
+              .setName("My Account")
+              .setPersonNumber("198512041305");
+
       swedenBankDatasource.insertIntoTable(address);
       swedenBankDatasource.insertIntoTable(user);
+      swedenBankDatasource.insertIntoTable(account);
 
       swedenBankDatasource.closeConnection();
 
