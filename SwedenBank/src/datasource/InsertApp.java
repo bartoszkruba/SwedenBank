@@ -7,10 +7,12 @@ public class InsertApp {
 
    public static void main(String[] args) {
 
-      SwedenBankDatasource swedenBankDatasource =
-              new SwedenBankDatasource(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
+      SwedenBankDatasource swedenBankDatasource = SwedenBankDatasource.getInstance();
 
-      swedenBankDatasource.openConnection();
+      swedenBankDatasource.openConnection(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
+
+      swedenBankDatasource.dropTable(User.class);
+      swedenBankDatasource.dropTable(Address.class);
 
       swedenBankDatasource.createTable(Address.class);
       swedenBankDatasource.createTable(User.class);

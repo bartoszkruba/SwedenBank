@@ -11,21 +11,15 @@ import java.util.List;
 
 public class Datasource {
 
-   private final String CONNECTION_STRING;
-   private final String LOGIN;
-   private final String PASSWORD;
-
    protected Connection conn;
 
-   public Datasource(String connectionString, String login, String password) {
-      this.CONNECTION_STRING = connectionString;
-      this.LOGIN = login;
-      this.PASSWORD = password;
+   public Datasource() {
+
    }
 
-   public boolean openConnection() {
+   public boolean openConnection(String connectionString, String login, String password) {
       try {
-         conn = DriverManager.getConnection(CONNECTION_STRING, LOGIN, PASSWORD);
+         conn = DriverManager.getConnection(connectionString, login, password);
          return true;
       } catch (SQLException e) {
          System.out.println("Couldn't open connection " + e.getMessage());
@@ -67,7 +61,7 @@ public class Datasource {
 
             Column column = f.getAnnotation(Column.class);
 
-            if(column != null){
+            if (column != null) {
                String name = column.value();
                queryBegining.append(name + ", ");
                values.append("?, ");
@@ -115,7 +109,7 @@ public class Datasource {
             Column column = f.getAnnotation(Column.class);
             KeyDescription keyDescription = f.getAnnotation(KeyDescription.class);
 
-            if(column != null && keyDescription != null){
+            if (column != null && keyDescription != null) {
                f.setAccessible(true);
                String name = column.value();
                String description = keyDescription.value();

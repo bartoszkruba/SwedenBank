@@ -2,8 +2,17 @@ package datasource;
 
 public class SwedenBankDatasource extends Datasource {
 
-   public SwedenBankDatasource(String connectionString, String login, String password) {
-      super(connectionString, login, password);
+   private static SwedenBankDatasource instance;
+
+   public static SwedenBankDatasource getInstance() {
+      if (instance == null) {
+         instance = new SwedenBankDatasource();
+      }
+      return instance;
+   }
+
+   private SwedenBankDatasource() {
+
    }
 
 }
