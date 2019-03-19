@@ -1,6 +1,9 @@
 package JavaFX;
 
+import models.BankAccount;
 import models.User;
+
+import java.util.List;
 
 public class State {
    private static State ourInstance = new State();
@@ -10,13 +13,10 @@ public class State {
    }
 
    private User user;
+   private List<BankAccount> accounts;
 
    private State() {
       user = new User();
-   }
-
-   public static State getOurInstance() {
-      return ourInstance;
    }
 
    public static void setOurInstance(State ourInstance) {
@@ -29,5 +29,13 @@ public class State {
 
    public void setUser(User user) {
       this.user = user;
+   }
+
+   public List<BankAccount> getAccounts() {
+      return accounts;
+   }
+
+   public void setAccounts(List<BankAccount> accounts) {
+      this.accounts = accounts;
    }
 }
