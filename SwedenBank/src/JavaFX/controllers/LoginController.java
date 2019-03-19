@@ -41,7 +41,7 @@ public class LoginController {
    Label passwordErrorLabel;
 
    @FXML
-   private void loginButtonPressed() throws Exception {
+   private void loginButtonPressed() {
       new Thread(() -> {
          passwordErrorLabel.setVisible(false);
          personnummerErrorLabel.setVisible(false);
@@ -68,7 +68,6 @@ public class LoginController {
    }
 
    private void switchWindow() {
-      System.out.println("Switching window");
       Platform.runLater(() -> {
          try {
             Parent root = FXMLLoader.load(getClass().getResource("../views/MainWindowView.fxml"));

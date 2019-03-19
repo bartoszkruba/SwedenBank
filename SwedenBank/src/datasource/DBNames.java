@@ -23,4 +23,14 @@ public class DBNames {
    public static final String COLUMN_ADRS_POST_CODE = "post_code";
    public static final String COLUMN_ADRS_CITY = "city";
    public static final String COLUMN_ADRS_COUNTRY = "country";
+
+   public static final String TABLE_ACCOUNTS = "accounts";
+
+   public static final String COLUMN_ACCOUNTS_NUMBER = "account_number";
+   public static final String COLUMN_ACCOUNTS_NAME = "name";
+   public static final String COLUMN_ACCOUNTS_PERS_NR = "user_person_nr";
+   public static final String COLUMN_ACCOUNTS_BALANCE = "balance";
+   public static final String COLUMN_ACCOUNT_SAVING_ACC = "is_saving_account";
+   public static final String COLUMN_ACCOUNT_SALARY_ACC = "is_salary_account";
+   public static final String COLUMN_ACCOUNT_OPENED_ON = "opened_on";
 }
