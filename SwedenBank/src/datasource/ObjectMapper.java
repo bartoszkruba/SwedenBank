@@ -68,22 +68,36 @@ public class ObjectMapper<T> {
 
    public List<T> map(ResultSet results) {
       try {
-         List<Map<String, Object>> rows = new ArrayList<>();
+         List<T> objects = new ArrayList<>();
 
          ResultSetMetaData metaData = results.getMetaData();
          int count = metaData.getColumnCount();
 
          while (results.next()) {
-            Map<String, Object> row = new HashMap<>();
-            for (int i = 1; i <= count; i++) {
-               String columnName = metaData.getColumnName(i);
-               Object value = results.getObject(i);
-               row.put(columnName, value);
+            T o = mapOne(results);
+            if (o != null) {
+               objects.add(o);
             }
-            rows.add(row);
          }
-         return this.map(rows);
+         return objects;
       } catch (SQLException e) {
+         return null;
+      }
+   }
+
+   public T mapOne(ResultSet results) {
+      try {
+         ResultSetMetaData metaData = results.getMetaData();
+         int count = metaData.getColumnCount();
+         Map<String, Object> row = new HashMap<>();
+         for (int i = 1; i <= count; i++) {
+            String columnName = metaData.getColumnName(i);
+            Object value = results.getObject(i);
+            row.put(columnName, value);
+         }
+         return this.map(row);
+      } catch (SQLException e) {
+         System.out.println("Couldn't map resultset: " + e.getMessage());
          return null;
       }
    }
