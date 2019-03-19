@@ -1,12 +1,20 @@
 package JavaFX.controllers;
 
+import JavaFX.Main;
+import JavaFX.State;
 import datasource.SwedenBankDatasource;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import models.User;
+
+import java.io.IOException;
 
 public class LoginController {
 
@@ -33,7 +41,7 @@ public class LoginController {
    Label passwordErrorLabel;
 
    @FXML
-   private void loginButtonPressed() {
+   private void loginButtonPressed() throws Exception {
       new Thread(() -> {
          passwordErrorLabel.setVisible(false);
          personnummerErrorLabel.setVisible(false);
@@ -51,10 +59,23 @@ public class LoginController {
             if (user == null) {
                passwordErrorLabel.setVisible(true);
             } else {
-               System.out.println("Process to login");
+               State.getInstance().setUser(user);
+               switchWindow();
             }
          }
          loginButton.setDisable(false);
       }).start();
+   }
+
+   private void switchWindow() {
+      System.out.println("Switching window");
+      Platform.runLater(() -> {
+         try {
+            Parent root = FXMLLoader.load(getClass().getResource("../views/MainWindowView.fxml"));
+            Main.primaryStage.setScene(new Scene(root));
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      });
    }
 }
