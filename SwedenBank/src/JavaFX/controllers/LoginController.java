@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import models.User;
 
 import java.io.IOException;
@@ -64,7 +65,15 @@ public class LoginController {
             }
          }
          loginButton.setDisable(false);
+         Platform.runLater(() -> loginButton.requestFocus());
       }).start();
+   }
+
+   @FXML
+   private void keyPressedOnField(KeyEvent e) {
+      if (e.getCode().toString().equals("ENTER")) {
+         loginButtonPressed();
+      }
    }
 
    private void switchWindow() {

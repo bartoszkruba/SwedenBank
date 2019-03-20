@@ -2,6 +2,7 @@ package datasource;
 
 import models.Address;
 import models.BankAccount;
+import models.Transaction;
 import models.User;
 
 public class InsertData {
@@ -12,6 +13,7 @@ public class InsertData {
 
       swedenBankDatasource.openConnection(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
 
+      swedenBankDatasource.dropTable(Transaction.class);
       swedenBankDatasource.dropTable(BankAccount.class);
       swedenBankDatasource.dropTable(User.class);
       swedenBankDatasource.dropTable(Address.class);
@@ -19,6 +21,7 @@ public class InsertData {
       swedenBankDatasource.createTable(Address.class);
       swedenBankDatasource.createTable(User.class);
       swedenBankDatasource.createTable(BankAccount.class);
+      swedenBankDatasource.createTable(Transaction.class);
 
       Address address = new Address();
       address.setStreetName("Storgatan")
@@ -28,7 +31,7 @@ public class InsertData {
               .setCountry("Sweden");
 
       User user = new User();
-      user.setPersonNr("198512041305")
+      user.setPersonNr("111122223333")
               .setFirstName("John")
               .setLastName("Doe")
               .setPassword("password1234")
@@ -38,13 +41,13 @@ public class InsertData {
 
       account.setAccountNumber("11112222333344")
               .setName("My Account")
-              .setPersonNumber("198512041305")
+              .setPersonNumber("111122223333")
               .setSalaryAccount("Y");
 
       BankAccount anotherAccount = new BankAccount();
       anotherAccount.setAccountNumber("99997777888866")
               .setName("Saving Account")
-              .setPersonNumber("198512041305")
+              .setPersonNumber("111122223333")
               .setSavingAccount("Y")
               .setBalance(24390);
 

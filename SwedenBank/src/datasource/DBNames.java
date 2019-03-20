@@ -33,4 +33,14 @@ public class DBNames {
    public static final String COLUMN_ACCOUNT_SAVING_ACC = "is_saving_account";
    public static final String COLUMN_ACCOUNT_SALARY_ACC = "is_salary_account";
    public static final String COLUMN_ACCOUNT_OPENED_ON = "opened_on";
+
+   public static final String TABLE_TRANSACTIONS = "transactions";
+
+   public static final String COLUMN_TRANSACTIONS_ID = "_id";
+   public static final String COLUMN_TRANSACTIONS_SENDER = "sender_account_nr";
+   public static final String COLUMN_TRANSACTIONS_RECEIVER = "receiver_account_nr";
+   public static final String COLUMN_TRANSACTIONS_DESC = "description";
+   public static final String COLUMN_TRANSACTIONS_TIMESTAMP = "happened_on";
+   public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
+   public static final String COLUMN_TRANSACTIONS_SALDO = "saldo";
 }

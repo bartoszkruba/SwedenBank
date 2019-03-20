@@ -6,20 +6,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="JavaFX.controllers.MainWindowController"
             prefHeight="400.0" prefWidth="600.0">
-
-    <BorderPane>
-        <left>
-            <ListView fx:id="accountListView">
-
-            </ListView>
-        </left>
-
-
-
-    </BorderPane>
-
-</AnchorPane>
+    <center>
+        <BorderPane>
+            <center>
+                <VBox>
+                    <Label text="Transactions: "/>
+                </VBox>
+            </center>
+            <left>
+                <VBox>
+                    <Label text="Your Accounts:"/>
+                    <ListView fx:id="accountListView"/>
+                </VBox>
+            </left>
+        </BorderPane>
+    </center>
+</BorderPane>

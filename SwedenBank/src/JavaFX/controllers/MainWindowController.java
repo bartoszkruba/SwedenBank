@@ -28,7 +28,6 @@ public class MainWindowController {
    }
 
    private void setUpAccountListView() {
-      accountListView.setItems(state.getAccounts());
       accountListView.setCellFactory(new Callback<ListView, ListCell>() {
          @Override
          public ListCell call(ListView param) {
@@ -40,6 +39,12 @@ public class MainWindowController {
                      setText(null);
                   } else {
                      String text = item.getName() + "(" + item.getBalance() + " SEK)";
+                     if (item.getSavingAccount().equals("Y")) {
+                        text = text + " \uD83C\uDFE6";
+                     }
+                     if (item.getSalaryAccount().equals("Y")) {
+                        text = text + " \uD83D\uDCB8";
+                     }
                      setText(text);
                   }
                }
@@ -47,6 +52,7 @@ public class MainWindowController {
             return cell;
          }
       });
+      accountListView.setItems(state.getAccounts());
    }
 
    private void loadAccounts() {
@@ -54,8 +60,9 @@ public class MainWindowController {
          List<BankAccount> accounts;
          accounts = swedenBankDatasource.queryAccountsForUser(state.getUser().getPersonNr());
          state.setAccounts(accounts);
-
-//         System.out.println(state.getAccounts().size());
+         if (state.getAccounts().size() != 0) {
+            accountListView.getSelectionModel().selectFirst();
+         }
       }).start();
    }
 }
