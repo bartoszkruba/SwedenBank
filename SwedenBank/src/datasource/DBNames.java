@@ -42,5 +42,4 @@ public class DBNames {
    public static final String COLUMN_TRANSACTIONS_DESC = "description";
    public static final String COLUMN_TRANSACTIONS_TIMESTAMP = "happened_on";
    public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
-   public static final String COLUMN_TRANSACTIONS_SALDO = "saldo";
 }

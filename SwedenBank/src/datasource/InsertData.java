@@ -37,24 +37,48 @@ public class InsertData {
               .setPassword("password1234")
               .setAddressId(1);
 
+      swedenBankDatasource.insertIntoTable(address);
+      swedenBankDatasource.insertIntoTable(user);
+
+
       BankAccount account = new BankAccount();
 
       account.setAccountNumber("11112222333344")
               .setName("My Account")
               .setPersonNumber("111122223333")
-              .setSalaryAccount("Y");
+              .setSalaryAccount("Y")
+              .setBalance(22856.5);
 
-      BankAccount anotherAccount = new BankAccount();
-      anotherAccount.setAccountNumber("99997777888866")
+      swedenBankDatasource.insertIntoTable(account);
+
+      account = new BankAccount();
+      account.setAccountNumber("99997777888866")
               .setName("Saving Account")
               .setPersonNumber("111122223333")
               .setSavingAccount("Y")
-              .setBalance(24390);
-
-      swedenBankDatasource.insertIntoTable(address);
-      swedenBankDatasource.insertIntoTable(user);
+              .setBalance(2000);
       swedenBankDatasource.insertIntoTable(account);
-      swedenBankDatasource.insertIntoTable(anotherAccount);
+
+
+      Transaction transaction = new Transaction();
+
+      transaction.setSenderAccountNumber("55554444333322")
+              .setReceiverAccountNumber("11112222333344")
+              .setDescription("Lön")
+              .setAmount(25000.0);
+      swedenBankDatasource.insertIntoTable(transaction);
+
+      transaction.setSenderAccountNumber("11112222333344")
+              .setReceiverAccountNumber("12346789098765")
+              .setDescription("ICA Maxi")
+              .setAmount(143.50);
+      swedenBankDatasource.insertIntoTable(transaction);
+
+      transaction.setSenderAccountNumber("11112222333344")
+              .setReceiverAccountNumber("99997777888866")
+              .setDescription("Transferred from \"My Account\" to \"Saving Account\"")
+              .setAmount(2000.0);
+      swedenBankDatasource.insertIntoTable(transaction);
 
       swedenBankDatasource.closeConnection();
 

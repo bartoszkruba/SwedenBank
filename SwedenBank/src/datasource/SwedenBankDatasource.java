@@ -2,6 +2,7 @@ package datasource;
 
 import models.Address;
 import models.BankAccount;
+import models.Transaction;
 import models.User;
 
 import java.sql.PreparedStatement;
@@ -21,12 +22,17 @@ public class SwedenBankDatasource extends Datasource {
    private final String QUERY_ACCOUNTS_FOR_USER = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS +
            " WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ?";
 
+   private final String QUERY_TEN_TRANSACTIONS = "SELECT * FROM " + DBNames.TABLE_TRANSACTIONS +
+           " WHERE " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = ? OR " +
+           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? ";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
 
    private ObjectMapper<User> userObjectMapper;
    private ObjectMapper<Address> addressObjectMapper;
    private ObjectMapper<BankAccount> accountObjectMapper;
+   private ObjectMapper<Transaction> transactionObjectMapper;
 
    public static SwedenBankDatasource getInstance() {
       if (instance == null) {
@@ -39,6 +45,7 @@ public class SwedenBankDatasource extends Datasource {
       userObjectMapper = new ObjectMapper<>(User.class);
       addressObjectMapper = new ObjectMapper<>(Address.class);
       accountObjectMapper = new ObjectMapper<>(BankAccount.class);
+      transactionObjectMapper = new ObjectMapper<>(Transaction.class);
    }
 
    @Override

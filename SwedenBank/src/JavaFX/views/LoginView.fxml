@@ -42,14 +42,14 @@
             <Insets left="20"/>
         </GridPane.margin>
         <Label text="Personnummer"/>
-        <TextField fx:id="personNumberField" onKeyPressed="#keyPressedOnField"/>
+        <TextField fx:id="personNumberField" onKeyPressed="#keyPressedOnField" text="111122223333"/>
     </VBox>
     <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
         <GridPane.margin>
             <Insets right="20"/>
         </GridPane.margin>
         <Label text="Password"/>
-        <PasswordField fx:id="passwordField" onKeyPressed="#keyPressedOnField"/>
+        <PasswordField fx:id="passwordField" onKeyPressed="#keyPressedOnField" text="password1234"/>
     </VBox>
 
     <Button fx:id="loginButton" text="Log In" GridPane.columnIndex="0" GridPane.columnSpan="2"

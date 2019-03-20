@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="JavaFX.controllers.MainWindowController"
@@ -13,14 +14,22 @@
     <center>
         <BorderPane>
             <center>
-                <VBox>
-                    <Label text="Transactions: "/>
+                <VBox alignment="TOP_CENTER">
+                    <Label text="Transactions: ">
+                        <padding>
+                            <Insets bottom="10.0" left="6.0" top="6.0"/>
+                        </padding>
+                    </Label>
                 </VBox>
             </center>
             <left>
                 <VBox>
-                    <Label text="Your Accounts:"/>
-                    <ListView fx:id="accountListView"/>
+                    <Label text="Your Accounts:">
+                        <padding>
+                            <Insets bottom="10.0" left="6.0" top="6.0"/>
+                        </padding>
+                    </Label>
+                    <ListView fx:id="accountListView" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </left>
         </BorderPane>

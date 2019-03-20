@@ -37,7 +37,59 @@ public class Transaction {
    @KeyDescription("DOUBLE(10,2) NOT NULL")
    private Double amount;
 
-   @Column(DBNames.COLUMN_TRANSACTIONS_SALDO)
-   @KeyDescription("DOUBLE(10,2) NOT NULL")
    private Double saldo;
+
+
+   public String getSenderAccountNumber() {
+      return senderAccountNumber;
+   }
+
+   public Transaction setSenderAccountNumber(String senderAccountNumber) {
+      this.senderAccountNumber = senderAccountNumber;
+      return this;
+   }
+
+   public String getReceiverAccountNumber() {
+      return receiverAccountNumber;
+   }
+
+   public Transaction setReceiverAccountNumber(String receiverAccountNumber) {
+      this.receiverAccountNumber = receiverAccountNumber;
+      return this;
+   }
+
+   public String getDescription() {
+      return description;
+   }
+
+   public Transaction setDescription(String description) {
+      this.description = description;
+      return this;
+   }
+
+   public Double getAmount() {
+      return amount;
+   }
+
+   public Transaction setAmount(Double amount) {
+      this.amount = amount;
+      return this;
+   }
+
+   public Double getSaldo() {
+      return saldo;
+   }
+
+   public Transaction setSaldo(Double saldo) {
+      this.saldo = saldo;
+      return this;
+   }
+
+   public Long getId() {
+      return id;
+   }
+
+   public Timestamp getTimestamp() {
+      return timestamp;
+   }
 }

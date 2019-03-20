@@ -80,7 +80,8 @@ public class LoginController {
       Platform.runLater(() -> {
          try {
             Parent root = FXMLLoader.load(getClass().getResource("../views/MainWindowView.fxml"));
-            Main.primaryStage.setScene(new Scene(root));
+
+            Main.primaryStage.setScene(new Scene(root, 1000, 700));
          } catch (IOException e) {
             e.printStackTrace();
          }
