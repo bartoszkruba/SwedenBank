@@ -24,10 +24,12 @@ public class SwedenBankDatasource extends Datasource {
 
    private final String QUERY_TEN_TRANSACTIONS = "SELECT * FROM " + DBNames.TABLE_TRANSACTIONS +
            " WHERE " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = ? OR " +
-           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? ";
+           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? " +
+           "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
 
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
+   private PreparedStatement queryTenTransactions;
 
    private ObjectMapper<User> userObjectMapper;
    private ObjectMapper<Address> addressObjectMapper;
@@ -54,6 +56,7 @@ public class SwedenBankDatasource extends Datasource {
       try {
          queryUser = conn.prepareStatement(QUERY_USER);
          queryAccountsForUser = conn.prepareStatement(QUERY_ACCOUNTS_FOR_USER);
+         queryTenTransactions = conn.prepareStatement(QUERY_TEN_TRANSACTIONS);
          return true;
       } catch (SQLException e) {
          System.out.println("Couldn't open connection: " + e.getMessage());
@@ -64,9 +67,10 @@ public class SwedenBankDatasource extends Datasource {
    @Override
    public boolean closeConnection() {
       try {
-         super.closeConnection();
          closeStatement(queryUser);
          closeStatement(queryAccountsForUser);
+         closeStatement(queryTenTransactions);
+         super.closeConnection();
          return true;
       } catch (SQLException e) {
          System.out.println("Couldn't close connection");
@@ -111,6 +115,26 @@ public class SwedenBankDatasource extends Datasource {
          return accounts;
       } catch (SQLException e) {
          System.out.println("Couldn't query accounts: " + e.getMessage());
+         return null;
+      }
+   }
+
+   public List<Transaction> queryTenTransactions(String accountNumber) {
+      if (queryTenTransactions == null) {
+         System.out.println("Connections is not open");
+         return null;
+      }
+
+      try {
+         queryTenTransactions.setString(1, accountNumber);
+         queryTenTransactions.setString(2, accountNumber);
+
+         ResultSet results = queryTenTransactions.executeQuery();
+
+         return transactionObjectMapper.map(results);
+
+      } catch (SQLException e) {
+         System.out.println("Couldn't query transactions: " + e.getMessage());
          return null;
       }
    }

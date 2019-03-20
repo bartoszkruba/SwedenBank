@@ -68,11 +68,23 @@ public class InsertData {
               .setAmount(25000.0);
       swedenBankDatasource.insertIntoTable(transaction);
 
+      try {
+         Thread.sleep(10000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
       transaction.setSenderAccountNumber("11112222333344")
               .setReceiverAccountNumber("12346789098765")
               .setDescription("ICA Maxi")
               .setAmount(143.50);
       swedenBankDatasource.insertIntoTable(transaction);
+
+      try {
+         Thread.sleep(10000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
 
       transaction.setSenderAccountNumber("11112222333344")
               .setReceiverAccountNumber("99997777888866")

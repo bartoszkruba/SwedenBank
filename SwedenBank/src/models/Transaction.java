@@ -6,6 +6,8 @@ import datasource.annotations.KeyDescription;
 import datasource.annotations.Table;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Transaction {
 

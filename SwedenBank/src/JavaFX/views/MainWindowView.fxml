@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="JavaFX.controllers.MainWindowController"
@@ -20,6 +21,30 @@
                             <Insets bottom="10.0" left="6.0" top="6.0"/>
                         </padding>
                     </Label>
+                    <TableView fx:id="transactionTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn text="Description:" fx:id="columnDescription">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="description"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;">
+                                <!--<cellValueFactory>-->
+                                <!--<PropertyValueFactory property="timestamp"/>-->
+                                <!--</cellValueFactory>-->
+                            </TableColumn>
+                            <TableColumn text="Amount:" style="-fx-alignment: CENTER-RIGHT;">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="amount"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Saldo:" style="-fx-alignment: CENTER-RIGHT;">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="saldo"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                        </columns>
+                    </TableView>
                 </VBox>
             </center>
             <left>
