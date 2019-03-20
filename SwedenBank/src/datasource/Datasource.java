@@ -81,7 +81,11 @@ public class Datasource {
          PreparedStatement statement = conn.prepareStatement(sql);
 
          for (int i = 1; i <= valuesToInsert.size(); i++) {
+
+            Object value = valuesToInsert.get(i - 1);
+
             statement.setObject(i, valuesToInsert.get(i - 1));
+
          }
 
          System.out.println(statement.toString());

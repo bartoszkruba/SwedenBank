@@ -30,16 +30,16 @@ public class BankAccount {
    private String personNumber;
 
    @Column(DBNames.COLUMN_ACCOUNTS_BALANCE)
-   @KeyDescription("INT NOT NULL DEFAULT 0")
-   private Integer balance;
+   @KeyDescription("DOUBLE(8,2) NOT NULL DEFAULT 0")
+   private Double balance;
 
    @Column(DBNames.COLUMN_ACCOUNT_SAVING_ACC)
-   @KeyDescription("BOOLEAN NOT NULL DEFAULT false")
-   private Boolean isSavingAccount;
+   @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
+   private String isSavingAccount;
 
    @Column(DBNames.COLUMN_ACCOUNT_SALARY_ACC)
-   @KeyDescription("BOOLEAN NOT NULL DEFAULT false")
-   private Boolean isSalaryAccount;
+   @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
+   private String isSalaryAccount;
 
    @Column(DBNames.COLUMN_ACCOUNT_OPENED_ON)
    @KeyDescription("TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
@@ -73,29 +73,29 @@ public class BankAccount {
       return this;
    }
 
-   public int getBalance() {
+   public double getBalance() {
       return balance;
    }
 
-   public BankAccount setBalance(int balance) {
+   public BankAccount setBalance(double balance) {
       this.balance = balance;
       return this;
    }
 
-   public boolean getSavingAccount() {
+   public String getSavingAccount() {
       return isSavingAccount;
    }
 
-   public BankAccount setSavingAccount(boolean savingAccount) {
+   public BankAccount setSavingAccount(String savingAccount) {
       isSavingAccount = savingAccount;
       return this;
    }
 
-   public boolean getSalaryAccount() {
+   public String getSalaryAccount() {
       return isSalaryAccount;
    }
 
-   public BankAccount setSalaryAccount(boolean salaryAccount) {
+   public BankAccount setSalaryAccount(String salaryAccount) {
       isSalaryAccount = salaryAccount;
       return this;
    }

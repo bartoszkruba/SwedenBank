@@ -38,11 +38,20 @@ public class InsertData {
 
       account.setAccountNumber("11112222333344")
               .setName("My Account")
-              .setPersonNumber("198512041305");
+              .setPersonNumber("198512041305")
+              .setSalaryAccount("Y");
+
+      BankAccount anotherAccount = new BankAccount();
+      anotherAccount.setAccountNumber("99997777888866")
+              .setName("Saving Account")
+              .setPersonNumber("198512041305")
+              .setSavingAccount("Y")
+              .setBalance(24390);
 
       swedenBankDatasource.insertIntoTable(address);
       swedenBankDatasource.insertIntoTable(user);
       swedenBankDatasource.insertIntoTable(account);
+      swedenBankDatasource.insertIntoTable(anotherAccount);
 
       swedenBankDatasource.closeConnection();
 

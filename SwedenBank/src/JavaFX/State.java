@@ -1,5 +1,7 @@
 package JavaFX;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import models.BankAccount;
 import models.User;
 
@@ -13,14 +15,11 @@ public class State {
    }
 
    private User user;
-   private List<BankAccount> accounts;
+   private ObservableList<BankAccount> accounts;
 
    private State() {
       user = new User();
-   }
-
-   public static void setOurInstance(State ourInstance) {
-      State.ourInstance = ourInstance;
+      accounts = FXCollections.observableArrayList();
    }
 
    public User getUser() {
@@ -31,11 +30,12 @@ public class State {
       this.user = user;
    }
 
-   public List<BankAccount> getAccounts() {
+   public ObservableList<BankAccount> getAccounts() {
       return accounts;
    }
 
    public void setAccounts(List<BankAccount> accounts) {
-      this.accounts = accounts;
+      this.accounts.clear();
+      this.accounts.addAll(accounts);
    }
 }

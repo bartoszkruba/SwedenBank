@@ -11,6 +11,15 @@
             fx:controller="JavaFX.controllers.MainWindowController"
             prefHeight="400.0" prefWidth="600.0">
 
-    <Label text="Main Window"/>
+    <BorderPane>
+        <left>
+            <ListView fx:id="accountListView">
+
+            </ListView>
+        </left>
+
+
+
+    </BorderPane>
 
 </AnchorPane>
