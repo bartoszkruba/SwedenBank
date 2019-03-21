@@ -29,7 +29,8 @@ public class SwedenBankDatasource extends Datasource {
            "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
 
    private final String QUERY_ACCOUNT_BALANCE = "SELECT " + DBNames.COLUMN_ACCOUNTS_BALANCE +
-           " FROM " + DBNames.TABLE_ACCOUNTS;
+           " FROM " + DBNames.TABLE_ACCOUNTS +
+           " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    private final String CALL_PROCEDURE_TRANSFER_MONEY = "CALL " + DBNames.PROCEDURE_TRANSFER_MONEY + "(?, ?, ?, ?)";
 
@@ -153,7 +154,8 @@ public class SwedenBankDatasource extends Datasource {
       }
    }
 
-   public double queryAccountBalance() throws Exception {
+   public double queryAccountBalance(String accountNumber) throws Exception {
+      queryAccountBalance.setString(1, accountNumber);
       ResultSet result = queryAccountBalance.executeQuery();
 
       if (result.isBeforeFirst()) {
@@ -185,6 +187,29 @@ public class SwedenBankDatasource extends Datasource {
    }
 
    public void callProcedureTransfer_money(String sender, String receiver, double amount, String description) {
+
+      try {
+         double balance = queryAccountBalance(sender);
+         if (balance < amount) {
+            System.out.println("Not enough money on account");
+            return;
+         }
+      } catch (SQLException e) {
+         System.out.println("couldn't query account balance: " + e.getMessage());
+         return;
+      } catch (Exception e) {
+         System.out.println("Sender doesn't exist in database");
+      }
+
+      try {
+         double balance = queryAccountBalance(receiver);
+      } catch (SQLException e) {
+         System.out.println("couldn't query account balance: " + e.getMessage());
+         return;
+      } catch (Exception e) {
+         System.out.println("Receiver doesn't exist in database");
+      }
+
       try {
          callProcedureTransfer_money.setString(1, sender);
          callProcedureTransfer_money.setString(2, receiver);

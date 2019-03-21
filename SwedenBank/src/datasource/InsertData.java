@@ -64,12 +64,6 @@ public class InsertData {
       swedenBankDatasource.insertIntoTable(account);
 
       System.out.println();
-//
-//      transaction.setSenderAccountNumber("55554444333322")
-//              .setReceiverAccountNumber("11112222333344")
-//              .setDescription("Lön")
-//              .setAmount(25000.0);
-//      swedenBankDatasource.insertIntoTable(transaction);
 
       swedenBankDatasource.callProcedureTransfer_money("55554444333322", "11112222333344",
               25000.0, "Lön");
@@ -80,12 +74,6 @@ public class InsertData {
          e.printStackTrace();
       }
 
-//      transaction.setSenderAccountNumber("11112222333344")
-//              .setReceiverAccountNumber("12346789098765")
-//              .setDescription("ICA Maxi")
-//              .setAmount(143.50);
-//      swedenBankDatasource.insertIntoTable(transaction);
-
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               143.50, "ICA Maxi");
 
@@ -94,12 +82,6 @@ public class InsertData {
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
-
-//      transaction.setSenderAccountNumber("11112222333344")
-//              .setReceiverAccountNumber("99997777888866")
-//              .setDescription("Transferred from \"My Account\" to \"Saving Account\"")
-//              .setAmount(2000.0);
-//      swedenBankDatasource.insertIntoTable(transaction);
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "99997777888866",
               2000.0, "Transferred from \"My Account\" to \"Saving Account\"");
