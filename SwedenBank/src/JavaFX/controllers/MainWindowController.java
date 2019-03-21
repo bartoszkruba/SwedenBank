@@ -3,13 +3,16 @@ package JavaFX.controllers;
 import JavaFX.State;
 import datasource.SwedenBankDatasource;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import models.BankAccount;
 import models.Transaction;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 
 import java.time.format.DateTimeFormatter;
@@ -31,6 +34,9 @@ public class MainWindowController {
 
    @FXML
    Button showMore_showLessBtn;
+
+   @FXML
+   BorderPane mainBorderPane;
 
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
@@ -157,7 +163,7 @@ public class MainWindowController {
          } else {
             transactions = swedenBankDatasource.queryTenTransactions(currentAccountNumber);
          }
-         
+
          double accountSaldo = account.getBalance();
 
          if (transactions != null) {
@@ -181,5 +187,24 @@ public class MainWindowController {
       loadTransactions((BankAccount) accountListView.getSelectionModel().getSelectedItem());
       showMore_showLessBtn.setText(newText);
       showMore_showLessBtn.setDisable(false);
+   }
+
+   @FXML
+   private void newTransactionSelected() {
+      showNewTransactionDialog();
+   }
+
+   private void showNewTransactionDialog() {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      dialog.initOwner(mainBorderPane.getScene().getWindow());
+      dialog.setTitle("Create New Transaction");
+
+      try {
+         dialog.getDialogPane().setContent(FXMLLoader.load(getClass().getResource("../views/NewTransactionDialog.fxml")));
+      } catch (IOException e) {
+         System.out.println("Couldn't load the dialog: " + e.getMessage());
+      }
+
+      dialog.showAndWait();
    }
 }
