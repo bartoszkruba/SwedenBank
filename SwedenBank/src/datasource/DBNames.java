@@ -42,4 +42,23 @@ public class DBNames {
    public static final String COLUMN_TRANSACTIONS_DESC = "description";
    public static final String COLUMN_TRANSACTIONS_TIMESTAMP = "happened_on";
    public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
+
+   public static final String PROCEDURE_TRANSFER_MONEY = "transfer_money";
+
+   public static final String CREATE_TRANSFER_MONEY_PROCEDURE = "" +
+           "CREATE PROCEDURE " + PROCEDURE_TRANSFER_MONEY +
+           "(sender VARCHAR(50), receiver VARCHAR(50), amount DECIMAL, description VARCHAR(250))\n" +
+           "BEGIN\n" +
+           "\tIF EXISTS(SELECT 1 FROM " + TABLE_ACCOUNTS +
+           " WHERE " + COLUMN_ACCOUNTS_NUMBER + " = receiver OR " + COLUMN_ACCOUNTS_NUMBER + " = sender) THEN\n" +
+           "\t\tUPDATE accounts SET " + COLUMN_ACCOUNTS_BALANCE + " = " + COLUMN_ACCOUNTS_BALANCE + " + amount " +
+           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = receiver;\n" +
+           "\t\tUPDATE accounts SET " + COLUMN_ACCOUNTS_BALANCE + " = " + COLUMN_ACCOUNTS_BALANCE + " - amount " +
+           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = sender;\n" +
+           "\t\tINSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_TRANSACTIONS_SENDER + ", " + COLUMN_TRANSACTIONS_RECEIVER +
+           ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " + COLUMN_TRANSACTIONS_DESC + ")\n" +
+           "VALUES(sender, receiver, amount, description); \n" +
+           "\tEND IF;\n" +
+           "END;\n" +
+           "";
 }

@@ -2,23 +2,16 @@ package JavaFX.controllers;
 
 import JavaFX.State;
 import datasource.SwedenBankDatasource;
-import datasource.annotations.Table;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import models.BankAccount;
 import models.Transaction;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 

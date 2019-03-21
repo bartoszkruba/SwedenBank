@@ -29,9 +29,6 @@
                                 </cellValueFactory>
                             </TableColumn>
                             <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;">
-                                <!--<cellValueFactory>-->
-                                <!--<PropertyValueFactory property="timestamp"/>-->
-                                <!--</cellValueFactory>-->
                             </TableColumn>
                             <TableColumn text="Amount:" style="-fx-alignment: CENTER-RIGHT;">
                                 <cellValueFactory>
