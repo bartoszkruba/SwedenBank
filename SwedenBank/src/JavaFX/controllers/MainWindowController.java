@@ -29,6 +29,9 @@ public class MainWindowController {
    @FXML
    TableColumn columnDescription;
 
+   @FXML
+   Button showMore_showLessBtn;
+
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
 
@@ -69,9 +72,12 @@ public class MainWindowController {
 
       accountListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
          if (newValue != null) {
+            showMore_showLessBtn.setVisible(true);
+            showMore_showLessBtn.setText("Show More");
             loadTransactions((BankAccount) newValue);
          } else {
             state.getTransactions().clear();
+            showMore_showLessBtn.setVisible(false);
          }
       });
 
@@ -141,22 +147,39 @@ public class MainWindowController {
    }
 
    private void loadTransactions(BankAccount account) {
-      String currentAccountNumber = account.getAccountNumber();
+      new Thread(() -> {
+         String currentAccountNumber = account.getAccountNumber();
 
-      List<Transaction> transactions =
-              swedenBankDatasource.queryTenTransactions(currentAccountNumber);
+         List<Transaction> transactions;
 
-      System.out.println(transactions.size());
-
-      double accountSaldo = account.getBalance();
-
-      for (Transaction t : transactions) {
-         t.setSaldo(accountSaldo);
-         if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
-            t.setAmount(t.getAmount() * -1);
-            accountSaldo += t.getAmount() * -1;
+         if (showMore_showLessBtn.getText().equals("Show Less")) {
+            transactions = swedenBankDatasource.queryAllTransactions(currentAccountNumber);
+         } else {
+            transactions = swedenBankDatasource.queryTenTransactions(currentAccountNumber);
          }
-      }
-      state.setTransactions(transactions);
+         
+         double accountSaldo = account.getBalance();
+
+         if (transactions != null) {
+            for (Transaction t : transactions) {
+               t.setSaldo(accountSaldo);
+               if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
+                  t.setAmount(t.getAmount() * -1);
+                  accountSaldo += t.getAmount() * -1;
+               }
+            }
+            state.setTransactions(transactions);
+         }
+         transactionTableView.refresh();
+      }).start();
+   }
+
+   @FXML
+   private void showMore_Show_LessBtnClicked() {
+      showMore_showLessBtn.setDisable(true);
+      String newText = showMore_showLessBtn.getText().equals("Show More") ? "Show Less" : "Show More";
+      loadTransactions((BankAccount) accountListView.getSelectionModel().getSelectedItem());
+      showMore_showLessBtn.setText(newText);
+      showMore_showLessBtn.setDisable(false);
    }
 }

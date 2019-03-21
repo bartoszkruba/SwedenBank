@@ -74,14 +74,117 @@ public class InsertData {
          e.printStackTrace();
       }
 
+      System.out.println();
+
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               143.50, "ICA Maxi");
 
       try {
-         Thread.sleep(1000);
+         Thread.sleep(5000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              15, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              243, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              87, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              192, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              13, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              432, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
+              52, "ICA Maxi");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346542398765",
+              130.00, "Frisör");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
+
+      swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346765438765",
+              10000.00, "Godis");
+
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "99997777888866",
               2000.0, "Transferred from \"My Account\" to \"Saving Account\"");

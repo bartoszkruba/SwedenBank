@@ -28,6 +28,11 @@ public class SwedenBankDatasource extends Datasource {
            DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? " +
            "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
 
+   private final String QUERY_ALL_TRANSACTIONS = "SELECT * FROM " + DBNames.TABLE_TRANSACTIONS +
+           " WHERE " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = ? OR " +
+           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? " +
+           "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC";
+
    private final String QUERY_ACCOUNT_BALANCE = "SELECT " + DBNames.COLUMN_ACCOUNTS_BALANCE +
            " FROM " + DBNames.TABLE_ACCOUNTS +
            " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
@@ -37,6 +42,7 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
+   private PreparedStatement queryAllTransactions;
    private PreparedStatement queryAccountBalance;
 
    private PreparedStatement callProcedureTransfer_money;
@@ -68,6 +74,7 @@ public class SwedenBankDatasource extends Datasource {
          queryAccountsForUser = conn.prepareStatement(QUERY_ACCOUNTS_FOR_USER);
          queryTenTransactions = conn.prepareStatement(QUERY_TEN_TRANSACTIONS);
          queryAccountBalance = conn.prepareStatement(QUERY_ACCOUNT_BALANCE);
+         queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
 
          callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
          return true;
@@ -85,6 +92,8 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(queryTenTransactions);
          closeStatement(queryAccountBalance);
          closeStatement(callProcedureTransfer_money);
+         closeStatement(queryAllTransactions);
+
          super.closeConnection();
          return true;
       } catch (SQLException e) {
@@ -135,23 +144,35 @@ public class SwedenBankDatasource extends Datasource {
    }
 
    public List<Transaction> queryTenTransactions(String accountNumber) {
-      if (queryTenTransactions == null) {
-         System.out.println("Connections is not open");
-         return null;
-      }
-
       try {
-         queryTenTransactions.setString(1, accountNumber);
-         queryTenTransactions.setString(2, accountNumber);
-
-         ResultSet results = queryTenTransactions.executeQuery();
-
-         return transactionObjectMapper.map(results);
-
+         return queryTransactions(queryTenTransactions, accountNumber);
       } catch (SQLException e) {
          System.out.println("Couldn't query transactions: " + e.getMessage());
          return null;
       }
+   }
+
+   public List<Transaction> queryAllTransactions(String accountNumber) {
+      try {
+         return queryTransactions(queryAllTransactions, accountNumber);
+      } catch (SQLException e) {
+         System.out.println("Couldn't query transactions: " + e.getMessage());
+         return null;
+      }
+   }
+
+   private synchronized List<Transaction> queryTransactions
+           (PreparedStatement statement, String accountNumber) throws SQLException {
+      if (statement == null) {
+         System.out.println("Connections is not open");
+         return null;
+      }
+      statement.setString(1, accountNumber);
+      statement.setString(2, accountNumber);
+
+      ResultSet results = statement.executeQuery();
+
+      return transactionObjectMapper.map(results);
    }
 
    public double queryAccountBalance(String accountNumber) throws Exception {
@@ -189,9 +210,7 @@ public class SwedenBankDatasource extends Datasource {
    public void callProcedureTransfer_money(String sender, String receiver, double amount, String description) {
 
       try {
-         double balance = queryAccountBalance(sender);
-         if (balance < amount) {
-            System.out.println("Not enough money on account");
+         if (!checkAccountBalance(sender, amount)) {
             return;
          }
       } catch (SQLException e) {
@@ -202,7 +221,7 @@ public class SwedenBankDatasource extends Datasource {
       }
 
       try {
-         double balance = queryAccountBalance(receiver);
+         queryAccountBalance(receiver);
       } catch (SQLException e) {
          System.out.println("couldn't query account balance: " + e.getMessage());
          return;
@@ -224,5 +243,14 @@ public class SwedenBankDatasource extends Datasource {
       } catch (SQLException e) {
          System.out.println("Couldn't call procedure: " + e.getMessage());
       }
+   }
+
+   private boolean checkAccountBalance(String accountNumber, double amount) throws Exception {
+      double balance = queryAccountBalance(accountNumber);
+      if (balance < amount) {
+         System.out.println("Not enough money on account");
+         return false;
+      }
+      return true;
    }
 }

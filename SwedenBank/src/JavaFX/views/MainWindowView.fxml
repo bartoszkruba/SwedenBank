@@ -42,6 +42,9 @@
                             </TableColumn>
                         </columns>
                     </TableView>
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button fx:id="showMore_showLessBtn" onAction="#showMore_Show_LessBtnClicked" text="Show More"/>
+                    </HBox>
                 </VBox>
             </center>
             <left>

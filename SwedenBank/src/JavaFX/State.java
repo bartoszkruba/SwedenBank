@@ -46,7 +46,7 @@ public class State {
       return transactions;
    }
 
-   public void setTransactions(List<Transaction> transactions) {
+   public synchronized void setTransactions(List<Transaction> transactions) {
       this.transactions.clear();
       this.transactions.addAll(transactions);
    }
