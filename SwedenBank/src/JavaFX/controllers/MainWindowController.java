@@ -3,6 +3,9 @@ package JavaFX.controllers;
 import JavaFX.State;
 import datasource.SwedenBankDatasource;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -133,7 +136,6 @@ public class MainWindowController {
                if (item == null || empty) {
                   setText(null);
                } else {
-                  // Format date.
                   setText(formatter.format(item.toLocalDateTime()));
                }
             }
@@ -142,7 +144,6 @@ public class MainWindowController {
       });
 
       transactionTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-      transactionTableView.setItems(state.getTransactions());
    }
 
 
@@ -158,32 +159,41 @@ public class MainWindowController {
    }
 
    private void loadTransactions(BankAccount account) {
-         String currentAccountNumber = account.getAccountNumber();
 
-         List<Transaction> transactions;
+      String currentAccountNumber = account.getAccountNumber();
 
-         if (showMore_showLessBtn.getText().equals("Show Less")) {
-            transactions = swedenBankDatasource.queryAllTransactions(currentAccountNumber);
-         } else {
-            transactions = swedenBankDatasource.queryTenTransactions(currentAccountNumber);
-         }
+      List<Transaction> transactions;
 
-         double accountSaldo = account.getBalance();
+      if (showMore_showLessBtn.getText().equals("Show Less")) {
+         transactions = swedenBankDatasource.queryAllTransactions(currentAccountNumber);
+      } else {
+         transactions = swedenBankDatasource.queryTenTransactions(currentAccountNumber);
+      }
 
-         if (transactions != null) {
-            for (Transaction t : transactions) {
-               t.setSaldo(accountSaldo);
-               if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
-                  t.setAmount(t.getAmount() * -1);
-               } else {
-                  t.setAmount(t.getAmount());
-               }
-               accountSaldo += t.getAmount() * -1;
+      double accountSaldo = account.getBalance();
+
+      if (transactions != null) {
+         for (Transaction t : transactions) {
+            t.setSaldo(accountSaldo);
+            if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
+               t.setAmount(t.getAmount() * -1);
+            } else {
+               t.setAmount(t.getAmount());
             }
-            state.setTransactions(transactions);
+            accountSaldo += t.getAmount() * -1;
          }
-//      new Thread(() -> {
-//      }).start();
+      }
+
+      Task<ObservableList<Transaction>> task = new Task<ObservableList<Transaction>>() {
+         @Override
+         protected ObservableList<Transaction> call() throws Exception {
+            return FXCollections.observableArrayList(transactions);
+         }
+      };
+
+      transactionTableView.itemsProperty().bind(task.valueProperty());
+
+      new Thread(task).start();
    }
 
    @FXML
