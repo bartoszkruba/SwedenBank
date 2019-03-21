@@ -2,6 +2,7 @@ package JavaFX.controllers;
 
 import JavaFX.State;
 import datasource.SwedenBankDatasource;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 public class MainWindowController {
 
@@ -199,12 +201,37 @@ public class MainWindowController {
       dialog.initOwner(mainBorderPane.getScene().getWindow());
       dialog.setTitle("Create New Transaction");
 
+      FXMLLoader fxmlLoader = new FXMLLoader();
+      fxmlLoader.setLocation(getClass().getResource("../views/NewTransactionDialog.fxml"));
       try {
-         dialog.getDialogPane().setContent(FXMLLoader.load(getClass().getResource("../views/NewTransactionDialog.fxml")));
+         dialog.getDialogPane().setContent(fxmlLoader.load());
       } catch (IOException e) {
+         e.printStackTrace();
          System.out.println("Couldn't load the dialog: " + e.getMessage());
+         return;
       }
 
-      dialog.showAndWait();
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+      Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+      NewTransactionController controller = fxmlLoader.getController();
+
+      btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+         if (validateNewTransaction(controller)) {
+         } else {
+            event.consume();
+
+         }
+      });
+
+      Optional<ButtonType> result = dialog.showAndWait();
+   }
+
+   private boolean validateNewTransaction(NewTransactionController controller) {
+      controller.getAccountError().setVisible(true);
+      controller.getMoneyError().setVisible(true);
+      return false;
    }
 }

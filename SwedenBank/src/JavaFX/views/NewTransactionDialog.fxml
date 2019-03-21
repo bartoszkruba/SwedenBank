@@ -9,13 +9,28 @@
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="JavaFX.controllers.NewTransactionController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0"
+            fx:id="dlg">
     <headerText>
         Create New Transaction
     </headerText>
     <content>
-        <GridPane>
-            <Label text="Account Number: "/>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Account Number: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="accountNumberField"/>
+            <Label text="Account doesn't exist" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                   fx:id="accountError" visible="false"/>
+
+            <Label text="Amount (SEK): " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="amountField"/>
+            <Label text="Not enough money" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                   fx:id="moneyError" visible="false"/>
+
+            <Label text="Description: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+
+            <Label text="Account: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ChoiceBox GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="3" fx:id="accountChoiceBox"/>
         </GridPane>
     </content>
 

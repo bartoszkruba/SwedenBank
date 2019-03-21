@@ -1,4 +1,93 @@
 package JavaFX.controllers;
 
+import JavaFX.State;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.util.StringConverter;
+import models.BankAccount;
+
+import java.util.function.UnaryOperator;
+
 public class NewTransactionController {
+
+   @FXML
+   TextField amountField;
+
+   @FXML
+   TextField accountNumberField;
+
+   @FXML
+   ChoiceBox accountChoiceBox;
+
+   @FXML
+   Label accountError;
+
+   @FXML
+   Label moneyError;
+
+   ObservableList<BankAccount> accounts;
+
+   @FXML
+   private void initialize() {
+      addFormatter();
+      setupAccountChoiceBox();
+   }
+
+   private void addFormatter() {
+      UnaryOperator<TextFormatter.Change> filter = change -> {
+         String text = change.getText();
+
+         if (text.matches("[0-9]*")) {
+            return change;
+         }
+
+         return null;
+      };
+      TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+      amountField.setTextFormatter(textFormatter);
+      textFormatter = new TextFormatter<>(filter);
+      accountNumberField.setTextFormatter(textFormatter);
+   }
+
+   private void setupAccountChoiceBox() {
+      accounts = FXCollections.observableArrayList(State.getInstance().getAccounts().filtered(a -> a.getSavingAccount().equals("N")));
+      accountChoiceBox.setItems(accounts);
+      if (!accountChoiceBox.getSelectionModel().isEmpty()) {
+         accountChoiceBox.getSelectionModel().selectFirst();
+      }
+
+      accountChoiceBox.setConverter(new StringConverter<BankAccount>() {
+         @Override
+         public String toString(BankAccount object) {
+            String format = "%.2f\n";
+            return object.getName() + " (" + String.format(format, object.getBalance()) + " SEK)";
+         }
+
+         @Override
+         public BankAccount fromString(String string) {
+            return new BankAccount().setName(string);
+         }
+      });
+
+      accountChoiceBox.setPrefWidth(500);
+   }
+
+   public TextField getAmountField() {
+      return amountField;
+   }
+
+   public TextField getAccountNumberField() {
+      return accountNumberField;
+   }
+
+   public Label getAccountError() {
+      return accountError;
+   }
+
+   public Label getMoneyError() {
+      return moneyError;
+   }
 }
