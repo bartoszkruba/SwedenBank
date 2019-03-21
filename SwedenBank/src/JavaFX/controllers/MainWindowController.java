@@ -2,6 +2,7 @@ package JavaFX.controllers;
 
 import JavaFX.State;
 import datasource.SwedenBankDatasource;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +54,8 @@ public class MainWindowController {
    }
 
    private void setUpAccountListView() {
+      accountListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
       accountListView.setCellFactory(new Callback<ListView, ListCell>() {
          @Override
          public ListCell call(ListView param) {
@@ -155,7 +158,6 @@ public class MainWindowController {
    }
 
    private void loadTransactions(BankAccount account) {
-      new Thread(() -> {
          String currentAccountNumber = account.getAccountNumber();
 
          List<Transaction> transactions;
@@ -173,13 +175,15 @@ public class MainWindowController {
                t.setSaldo(accountSaldo);
                if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
                   t.setAmount(t.getAmount() * -1);
-                  accountSaldo += t.getAmount() * -1;
+               } else {
+                  t.setAmount(t.getAmount());
                }
+               accountSaldo += t.getAmount() * -1;
             }
             state.setTransactions(transactions);
          }
-         transactionTableView.refresh();
-      }).start();
+//      new Thread(() -> {
+//      }).start();
    }
 
    @FXML
@@ -222,16 +226,54 @@ public class MainWindowController {
          if (validateNewTransaction(controller)) {
          } else {
             event.consume();
-
          }
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+         String receiver = controller.getAccountNumberField().getText();
+         String sender =
+                 ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber();
+         double amount = Double.parseDouble(controller.getAmountField().getText());
+         String description = controller.getDescriptonField().getText();
+
+         new Thread(() -> {
+            swedenBankDatasource.callProcedureTransfer_money(sender, receiver, amount, description);
+            Platform.runLater(() -> loadAccounts());
+         }).start();
+      }
    }
 
    private boolean validateNewTransaction(NewTransactionController controller) {
-      controller.getAccountError().setVisible(true);
-      controller.getMoneyError().setVisible(true);
-      return false;
+      controller.getAccountError().setVisible(false);
+      controller.getMoneyError().setVisible(false);
+
+      var returnValue = new Object() {
+         boolean returnValue;
+      };
+
+      returnValue.returnValue = true;
+
+      double amount = Double.parseDouble(controller.getAmountField().getText());
+      String receiver = controller.getAccountNumberField().getText();
+
+      new Thread(() -> {
+         try {
+            double balance = swedenBankDatasource.queryAccountBalance(receiver);
+            if (amount > balance) {
+               Platform.runLater(() -> controller.getMoneyError().setVisible(true));
+               System.out.println("not enough money");
+               returnValue.returnValue = false;
+            }
+         } catch (IllegalStateException e) {
+            Platform.runLater(() -> controller.getAccountError().setVisible(true));
+            returnValue.returnValue = false;
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+      }).start();
+
+      return returnValue.returnValue;
    }
 }

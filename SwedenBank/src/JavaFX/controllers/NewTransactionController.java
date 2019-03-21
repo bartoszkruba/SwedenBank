@@ -14,19 +14,22 @@ import java.util.function.UnaryOperator;
 public class NewTransactionController {
 
    @FXML
-   TextField amountField;
+   private TextField amountField;
 
    @FXML
-   TextField accountNumberField;
+   private TextField accountNumberField;
 
    @FXML
-   ChoiceBox accountChoiceBox;
+   private ChoiceBox accountChoiceBox;
 
    @FXML
-   Label accountError;
+   private Label accountError;
 
    @FXML
-   Label moneyError;
+   private Label moneyError;
+
+   @FXML
+   TextField descriptonField;
 
    ObservableList<BankAccount> accounts;
 
@@ -89,5 +92,13 @@ public class NewTransactionController {
 
    public Label getMoneyError() {
       return moneyError;
+   }
+
+   public ChoiceBox getAccountChoiceBox() {
+      return accountChoiceBox;
+   }
+
+   public TextField getDescriptonField() {
+      return descriptonField;
    }
 }

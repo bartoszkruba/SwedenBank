@@ -27,7 +27,7 @@
                    fx:id="moneyError" visible="false"/>
 
             <Label text="Description: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+            <TextField GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="3" fx:id="descriptonField"/>
 
             <Label text="Account: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <ChoiceBox GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="3" fx:id="accountChoiceBox"/>
