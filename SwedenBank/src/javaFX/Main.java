@@ -1,4 +1,4 @@
-package JavaFX;
+package javaFX;
 
 import datasource.DBNames;
 import datasource.SwedenBankDatasource;

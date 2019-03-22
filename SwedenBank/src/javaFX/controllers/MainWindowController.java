@@ -1,10 +1,9 @@
-package JavaFX.controllers;
+package javaFX.controllers;
 
-import JavaFX.State;
+import javaFX.State;
 import datasource.SwedenBankDatasource;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -331,6 +330,8 @@ public class MainWindowController {
 
       String name = controller.getAccountNameTextField().getText();
       String personNumber = state.getUser().getPersonNr();
+
+      if (name.equals("")) return false;
 
       try {
          BankAccount account = swedenBankDatasource.queryAccountOnName(personNumber, name);

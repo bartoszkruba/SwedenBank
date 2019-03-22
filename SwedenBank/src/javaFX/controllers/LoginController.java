@@ -1,7 +1,7 @@
-package JavaFX.controllers;
+package javaFX.controllers;
 
-import JavaFX.Main;
-import JavaFX.State;
+import javaFX.Main;
+import javaFX.State;
 import datasource.SwedenBankDatasource;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
