@@ -150,7 +150,7 @@ public class MainWindowController {
    }
 
    private void editAccount(BankAccount account) {
-      System.out.println("Editing " + account);
+      showEditAccountDialog();
    }
 
    private void setupTransactionTableView() {
@@ -412,7 +412,7 @@ public class MainWindowController {
    private void showDeleteAccountDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
       dialog.initOwner(mainBorderPane.getScene().getWindow());
-      dialog.setTitle("New Transaction");
+      dialog.setTitle("Delete Account");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
       fxmlLoader.setLocation(getClass().getResource("../views/DeleteAccountDialog.fxml"));
@@ -464,6 +464,49 @@ public class MainWindowController {
          }
          alert.showAndWait();
          loadAccounts();
+      }
+   }
+
+   private void showEditAccountDialog() {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      dialog.initOwner(mainBorderPane.getScene().getWindow());
+      dialog.setTitle("Edit Account");
+
+      FXMLLoader fxmlLoader = new FXMLLoader();
+      fxmlLoader.setLocation(getClass().getResource("../views/EditAccountDialog.fxml"));
+      try {
+         dialog.getDialogPane().setContent(fxmlLoader.load());
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.out.println("Couldn't load the dialog: " + e.getMessage());
+         return;
+      }
+
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+      Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+      EditAccountController controller = fxmlLoader.getController();
+
+      controller.accountNameField.setText(state.getCurrentAccount().getName());
+
+      String savingAccount = state.getCurrentAccount().getSavingAccount();
+
+      if (savingAccount.equals("Y")) {
+         controller.getSavingAccountCheckBox().setSelected(true);
+      } else {
+         controller.getSavingAccountCheckBox().setSelected(false);
+      }
+
+      btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+
+      });
+
+      Optional<ButtonType> result = dialog.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+
       }
    }
 }

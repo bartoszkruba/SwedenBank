@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="javaFX.controllers.EditAccountController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <headerText>
+        Edit your account:
+    </headerText>
+
+    <content>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Account Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="accountNameField"/>
+
+            <Label text="Saving Account:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="savingAccountCheckBox"/>
+        </GridPane>
+    </content>
+
+</DialogPane>
