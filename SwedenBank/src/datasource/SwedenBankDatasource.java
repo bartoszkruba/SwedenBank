@@ -269,9 +269,9 @@ public class SwedenBankDatasource extends Datasource {
       return true;
    }
 
-   public BankAccount queryAccountOnName(String accountNumber, String name) throws Exception {
+   public BankAccount queryAccountOnName(String personNr, String name) throws Exception {
       try {
-         queryAccountOnName.setString(1, accountNumber);
+         queryAccountOnName.setString(1, personNr);
          queryAccountOnName.setString(2, name);
 
          ResultSet result = queryAccountOnName.executeQuery();

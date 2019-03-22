@@ -489,7 +489,7 @@ public class MainWindowController {
 
       EditAccountController controller = fxmlLoader.getController();
 
-      controller.accountNameField.setText(state.getCurrentAccount().getName());
+      controller.getAccountNameField().setText(state.getCurrentAccount().getName());
 
       String savingAccount = state.getCurrentAccount().getSavingAccount();
 
@@ -500,7 +500,20 @@ public class MainWindowController {
       }
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-
+         controller.getNameError().setVisible(false);
+         controller.getConnectionError().setVisible(false);
+         String personNr = state.getUser().getPersonNr();
+         String name = controller.getAccountNameField().getText();
+         try {
+            BankAccount account = swedenBankDatasource.queryAccountOnName(personNr, name);
+            if (account != null) {
+               controller.getNameError().setVisible(true);
+               event.consume();
+            }
+         } catch (Exception e) {
+            controller.getConnectionError().setVisible(true);
+            event.consume();
+         }
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
