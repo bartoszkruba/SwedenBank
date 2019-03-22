@@ -142,6 +142,8 @@ public class MainWindowController {
          alert.setHeaderText("Unable to delete account");
          alert.setContentText("\"" + account.getName() + "\" is your only account");
          alert.showAndWait();
+      } else {
+         showDeleteAccountDialog();
       }
    }
 
@@ -402,6 +404,39 @@ public class MainWindowController {
       @Override
       protected Object call() throws Exception {
          return FXCollections.observableArrayList(state.getTransactions());
+      }
+   }
+
+   private void showDeleteAccountDialog() {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      dialog.initOwner(mainBorderPane.getScene().getWindow());
+      dialog.setTitle("New Transaction");
+
+      FXMLLoader fxmlLoader = new FXMLLoader();
+      fxmlLoader.setLocation(getClass().getResource("../views/DeleteAccountDialog.fxml"));
+      try {
+         dialog.getDialogPane().setContent(fxmlLoader.load());
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.out.println("Couldn't load the dialog: " + e.getMessage());
+         return;
+      }
+
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+      Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+      DeleteAccountController controller = fxmlLoader.getController();
+
+      btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+
+      });
+
+      Optional<ButtonType> result = dialog.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+
       }
    }
 }
