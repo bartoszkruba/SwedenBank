@@ -11,9 +11,9 @@ public class AccountNumberGenerator {
       while (true) {
          try {
             SwedenBankDatasource.getInstance().queryAccountBalance(number);
-            return number;
-         } catch (Exception e) {
             number = generateNumber();
+         } catch (Exception e) {
+            return number;
          }
       }
    }

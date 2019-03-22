@@ -1,9 +1,14 @@
 package javaFX.controllers;
 
+import datasource.SwedenBankDatasource;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import models.BankAccount;
+
+import javaFX.State;
+import util.AccountNumberGenerator;
 
 
 public class NewAccountController {
@@ -20,6 +25,21 @@ public class NewAccountController {
    @FXML
    private CheckBox savingAccountCheckBox;
 
+   public BankAccount processResults() {
+      BankAccount account = new BankAccount();
+      account.setName(accountNameTextField.getText());
+
+      if (savingAccountCheckBox.isSelected()) {
+         account.setSavingAccount("Y");
+      } else {
+         account.setSavingAccount("N");
+      }
+
+      account.setPersonNumber(State.getInstance().getUser().getPersonNr())
+              .setAccountNumber(AccountNumberGenerator.generateUniqueNumber(SwedenBankDatasource.getInstance()));
+
+      return account;
+   }
 
    public TextField getAccountNameTextField() {
       return accountNameTextField;

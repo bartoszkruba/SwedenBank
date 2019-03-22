@@ -23,7 +23,6 @@ public class BankAccount {
 
    @Column(DBNames.COLUMN_ACCOUNTS_PERS_NR)
    @KeyDescription("CHAR(12) NOT NULL," +
-           "UNIQUE KEY(" + DBNames.COLUMN_ACCOUNTS_PERS_NR + ")," +
            "FOREIGN KEY (" + DBNames.COLUMN_ACCOUNTS_PERS_NR +
            ") REFERENCES " + DBNames.TABLE_USERS + "(" + DBNames.COLUMN_USERS_PERSON_NR + ") " +
            " ON UPDATE CASCADE ON DELETE CASCADE")

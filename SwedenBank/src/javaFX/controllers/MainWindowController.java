@@ -43,6 +43,9 @@ public class MainWindowController {
    @FXML
    BorderPane mainBorderPane;
 
+   @FXML
+   ContextMenu accountContextMenu;
+
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
 
@@ -51,6 +54,8 @@ public class MainWindowController {
       swedenBankDatasource = SwedenBankDatasource.getInstance();
       state = State.getInstance();
 
+      accountContextMenu = new ContextMenu();
+
       setUpAccountListView();
       setupTransactionTableView();
       loadAccounts();
@@ -58,6 +63,9 @@ public class MainWindowController {
 
    private void setUpAccountListView() {
       accountListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+      addDeleteToContextMenu();
+      addEditContextMenu();
 
       accountListView.setCellFactory(new Callback<ListView, ListCell>() {
          @Override
@@ -80,6 +88,14 @@ public class MainWindowController {
                   }
                }
             };
+
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+               if (isNowEmpty) {
+                  cell.setContextMenu(null);
+               } else {
+                  cell.setContextMenu(accountContextMenu);
+               }
+            });
             return cell;
          }
       });
@@ -96,6 +112,35 @@ public class MainWindowController {
       });
 
       accountListView.setItems(state.getAccounts());
+   }
+
+   private void addDeleteToContextMenu() {
+      MenuItem deleteMenuItem = new MenuItem("Delete Account");
+      deleteMenuItem.setOnAction(event -> {
+         BankAccount account = ((BankAccount) accountListView.getSelectionModel().getSelectedItem());
+         deleteAccount(account);
+      });
+
+      accountContextMenu.getItems().add(deleteMenuItem);
+
+   }
+
+   private void addEditContextMenu() {
+      MenuItem editMenuItem = new MenuItem("Edit Account");
+      editMenuItem.setOnAction(event -> {
+         BankAccount account = ((BankAccount) accountListView.getSelectionModel().getSelectedItem());
+         editAccount(account);
+      });
+
+      accountContextMenu.getItems().add(editMenuItem);
+   }
+
+   private void deleteAccount(BankAccount account) {
+      System.out.println("Deleting" + account);
+   }
+
+   private void editAccount(BankAccount account) {
+      System.out.println("Editing " + account);
    }
 
    private void setupTransactionTableView() {
@@ -151,10 +196,12 @@ public class MainWindowController {
       new Thread(() -> {
          List<BankAccount> accounts;
          accounts = swedenBankDatasource.queryAccountsForUser(state.getUser().getPersonNr());
-         state.setAccounts(accounts);
-         if (state.getAccounts().size() != 0) {
-            accountListView.getSelectionModel().selectFirst();
-         }
+         Platform.runLater(() -> {
+            state.setAccounts(accounts);
+            if (state.getAccounts().size() != 0) {
+               accountListView.getSelectionModel().selectFirst();
+            }
+         });
       }).start();
    }
 
@@ -319,7 +366,13 @@ public class MainWindowController {
       Optional<ButtonType> result = dialog.showAndWait();
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
-         System.out.println("Ok button pressed");
+         new Thread(() -> {
+            BankAccount account = controller.processResults();
+            swedenBankDatasource.insertIntoTable(account);
+            Platform.runLater(() -> {
+               loadAccounts();
+            });
+         }).start();
       }
 
    }
