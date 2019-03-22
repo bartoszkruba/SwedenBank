@@ -136,7 +136,13 @@ public class MainWindowController {
    }
 
    private void deleteAccount(BankAccount account) {
-      System.out.println("Deleting" + account);
+      if (accountListView.getItems().size() == 1) {
+         Alert alert = new Alert(Alert.AlertType.WARNING);
+         alert.setTitle("There's a problem");
+         alert.setHeaderText("Unable to delete account");
+         alert.setContentText("\"" + account.getName() + "\" is your only account");
+         alert.showAndWait();
+      }
    }
 
    private void editAccount(BankAccount account) {
@@ -232,13 +238,6 @@ public class MainWindowController {
       }
 
       state.setTransactions(transactions);
-
-//      Task<ObservableList<Transaction>> task = new Task<ObservableList<Transaction>>() {
-//         @Override
-//         protected ObservableList<Transaction> call() throws Exception {
-//            return FXCollections.observableArrayList(state.getTransactions());
-//         }
-//      };
 
       ShowTransactions task = new ShowTransactions();
 
