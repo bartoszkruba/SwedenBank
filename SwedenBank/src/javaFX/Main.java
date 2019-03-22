@@ -3,10 +3,12 @@ package javaFX;
 import datasource.DBNames;
 import datasource.SwedenBankDatasource;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
    public static Stage primaryStage;
@@ -18,6 +20,10 @@ public class Main extends Application {
       primaryStage.setTitle("SwedenBank");
       primaryStage.setScene(new Scene(root, 450, 280));
       primaryStage.show();
+
+      primaryStage.setOnCloseRequest(e -> {
+         SwedenBankDatasource.getInstance().closeConnection();
+      });
    }
 
    public static void main(String[] args) {

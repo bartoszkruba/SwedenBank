@@ -46,6 +46,10 @@ public class SwedenBankDatasource extends Datasource {
    private final String DELETE_ACCOUNT = "DELETE FROM " + DBNames.TABLE_ACCOUNTS + " " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
+   private final String UPDATE_ACCOUNT = "UPDATE " + DBNames.TABLE_ACCOUNTS + " " +
+           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNT_SAVING_ACC + " = ? " +
+           "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
@@ -54,6 +58,8 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryAccountOnName;
 
    private PreparedStatement deleteAccount;
+
+   private PreparedStatement updateAccount;
 
    private PreparedStatement callProcedureTransfer_money;
 
@@ -89,6 +95,8 @@ public class SwedenBankDatasource extends Datasource {
 
          deleteAccount = conn.prepareStatement(DELETE_ACCOUNT);
 
+         updateAccount = conn.prepareStatement(UPDATE_ACCOUNT);
+
          callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
          return true;
       } catch (SQLException e) {
@@ -108,6 +116,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(queryAllTransactions);
          closeStatement(queryAccountOnName);
          closeStatement(deleteAccount);
+         closeStatement(updateAccount);
 
          super.closeConnection();
          return true;
@@ -341,5 +350,22 @@ public class SwedenBankDatasource extends Datasource {
          }
       }
       return false;
+   }
+
+   public void updateAccount(String accountNumber, String accountName, boolean savingAccount) {
+      try {
+         updateAccount.setString(1, accountName);
+         if (savingAccount) {
+            updateAccount.setString(2, "Y");
+         } else {
+            updateAccount.setString(2, "N");
+         }
+         updateAccount.setString(3, accountNumber);
+
+         updateAccount.executeUpdate();
+
+      } catch (SQLException e) {
+         System.out.println("Couldn't update account: " + e.getMessage());
+      }
    }
 }

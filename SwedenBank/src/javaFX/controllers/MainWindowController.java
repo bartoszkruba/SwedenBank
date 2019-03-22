@@ -519,7 +519,13 @@ public class MainWindowController {
       Optional<ButtonType> result = dialog.showAndWait();
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
+         String newName = controller.getAccountNameField().getText();
+         boolean isSavingAccount = controller.getSavingAccountCheckBox().isSelected();
+         String accountNumber = state.getCurrentAccount().getAccountNumber();
 
+         swedenBankDatasource.updateAccount(accountNumber, newName, isSavingAccount);
+
+         loadAccounts();
       }
    }
 }
