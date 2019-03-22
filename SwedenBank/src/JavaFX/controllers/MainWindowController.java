@@ -292,6 +292,11 @@ public class MainWindowController {
       return returnValue.returnValue;
    }
 
+   @FXML
+   private void newAccountSelected(){
+      System.out.println("Create new account");
+   }
+
    class ShowTransactions extends Task {
       @Override
       protected Object call() throws Exception {

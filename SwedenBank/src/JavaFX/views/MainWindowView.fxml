@@ -21,6 +21,11 @@
                         <MenuItem onAction="#newTransactionSelected" text="New Transaction"/>
                     </items>
                 </Menu>
+                <Menu text="Accounts">
+                    <items>
+                        <MenuItem onAction="#newAccountSelected" text="New Account"/>
+                    </items>
+                </Menu>
             </MenuBar>
         </VBox>
     </top>
