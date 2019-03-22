@@ -218,7 +218,7 @@ public class MainWindowController {
    private void showNewTransactionDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
       dialog.initOwner(mainBorderPane.getScene().getWindow());
-      dialog.setTitle("Create New Transaction");
+      dialog.setTitle("New Transaction");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
       fxmlLoader.setLocation(getClass().getResource("../views/NewTransactionDialog.fxml"));
@@ -293,8 +293,38 @@ public class MainWindowController {
    }
 
    @FXML
-   private void newAccountSelected(){
-      System.out.println("Create new account");
+   private void newAccountSelected() {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      dialog.initOwner(mainBorderPane.getScene().getWindow());
+      dialog.setTitle("New Account");
+
+      FXMLLoader fxmlLoader = new FXMLLoader();
+      fxmlLoader.setLocation(getClass().getResource("../views/NewAccountDialog.fxml"));
+      try {
+         dialog.getDialogPane().setContent(fxmlLoader.load());
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.out.println("Couldn't load the dialog: " + e.getMessage());
+         return;
+      }
+
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+      Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+//      NewTransactionController controller = fxmlLoader.getController();
+
+      btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+
+      });
+
+      Optional<ButtonType> result = dialog.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+         System.out.println("Ok button pressed");
+      }
+
    }
 
    class ShowTransactions extends Task {
