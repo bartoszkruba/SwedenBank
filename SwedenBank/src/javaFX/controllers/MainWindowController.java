@@ -38,6 +38,12 @@ public class MainWindowController {
    TableColumn columnDescription;
 
    @FXML
+   TableColumn columnAmount;
+
+   @FXML
+   TableColumn columnSaldo;
+
+   @FXML
    Button showMore_showLessBtn;
 
    @FXML
@@ -192,6 +198,51 @@ public class MainWindowController {
                   setText(null);
                } else {
                   setText(formatter.format(item.toLocalDateTime()));
+               }
+            }
+         };
+         return cell;
+      });
+
+      columnAmount.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("amount"));
+
+      columnAmount.setCellFactory(column -> {
+         TableCell cell = new TableCell<Transaction, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+               super.updateItem(item, empty);
+
+               String format = "%.2f";
+
+               if (item == null || empty) {
+                  setText(null);
+               } else {
+                  StringBuilder sb = new StringBuilder();
+                  if (item > 0) {
+                     sb.append("+");
+                  }
+                  sb.append(String.format(format, item) + " (SEK)");
+                  setText(sb.toString());
+               }
+            }
+         };
+         return cell;
+      });
+
+      columnSaldo.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("saldo"));
+
+      columnSaldo.setCellFactory(column -> {
+         TableCell cell = new TableCell<Transaction, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+               super.updateItem(item, empty);
+
+               String format = "%.2f";
+
+               if (item == null || empty) {
+                  setText(null);
+               } else {
+                  setText(String.format(format, item) + " (SEK)");
                }
             }
          };
@@ -402,12 +453,6 @@ public class MainWindowController {
       }
    }
 
-   class ShowTransactions extends Task {
-      @Override
-      protected Object call() throws Exception {
-         return FXCollections.observableArrayList(state.getTransactions());
-      }
-   }
 
    private void showDeleteAccountDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
@@ -506,7 +551,7 @@ public class MainWindowController {
          String name = controller.getAccountNameField().getText();
          try {
             BankAccount account = swedenBankDatasource.queryAccountOnName(personNr, name);
-            if (account != null) {
+            if (account != null && !name.equals(state.getCurrentAccount().getName())) {
                controller.getNameError().setVisible(true);
                event.consume();
             }
@@ -526,6 +571,13 @@ public class MainWindowController {
          swedenBankDatasource.updateAccount(accountNumber, newName, isSavingAccount);
 
          loadAccounts();
+      }
+   }
+
+   class ShowTransactions extends Task {
+      @Override
+      protected Object call() throws Exception {
+         return FXCollections.observableArrayList(state.getTransactions());
       }
    }
 }

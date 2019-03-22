@@ -64,7 +64,7 @@ public class NewTransactionController {
       accountChoiceBox.setConverter(new StringConverter<BankAccount>() {
          @Override
          public String toString(BankAccount object) {
-            String format = "%.2f\n";
+            String format = "%.2f";
             return object.getName() + " (" + String.format(format, object.getBalance()) + " SEK)";
          }
 

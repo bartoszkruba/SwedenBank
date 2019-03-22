@@ -45,18 +45,9 @@
                                     <PropertyValueFactory property="description"/>
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;">
-                            </TableColumn>
-                            <TableColumn text="Amount:" style="-fx-alignment: CENTER-RIGHT;">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="amount"/>
-                                </cellValueFactory>
-                            </TableColumn>
-                            <TableColumn text="Saldo:" style="-fx-alignment: CENTER-RIGHT;">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="saldo"/>
-                                </cellValueFactory>
-                            </TableColumn>
+                            <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;"/>
+                            <TableColumn fx:id="columnAmount" text="Amount:" style="-fx-alignment: CENTER-RIGHT;"/>
+                            <TableColumn fx:id="columnSaldo" text="Saldo:" style="-fx-alignment: CENTER-RIGHT;"/>
                         </columns>
                     </TableView>
                     <HBox alignment="CENTER_RIGHT">
