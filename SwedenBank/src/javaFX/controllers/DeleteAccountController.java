@@ -5,20 +5,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import models.BankAccount;
 
 public class DeleteAccountController {
 
    @FXML
-   ChoiceBox accountChoiceBox;
+   private ChoiceBox accountChoiceBox;
 
-   ObservableList<BankAccount> accounts;
+   @FXML
+   private Label accountError;
+
+   private ObservableList<BankAccount> accounts;
 
    @FXML
    private void initialize() {
       setupAccountChoiceBox();
    }
+
 
    private void setupAccountChoiceBox() {
       accounts = FXCollections.observableArrayList(State.getInstance().getAccounts().filtered(a -> a != State.getInstance().getCurrentAccount()));
@@ -44,4 +49,11 @@ public class DeleteAccountController {
       accountChoiceBox.setPrefWidth(500);
    }
 
+   public ChoiceBox getAccountChoiceBox() {
+      return accountChoiceBox;
+   }
+
+   public Label getAccountError() {
+      return accountError;
+   }
 }

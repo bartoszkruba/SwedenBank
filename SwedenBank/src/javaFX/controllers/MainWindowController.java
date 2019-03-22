@@ -433,13 +433,18 @@ public class MainWindowController {
 
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+         BankAccount transferAccount = (BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem();
+         if (transferAccount == null) {
+            controller.getAccountError().setVisible(true);
+            event.consume();
+         }
 
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
-
+         System.out.println("Account can be deleted");
       }
    }
 }
