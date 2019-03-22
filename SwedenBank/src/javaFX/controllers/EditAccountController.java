@@ -15,6 +15,12 @@ public class EditAccountController {
    private CheckBox savingAccountCheckBox;
 
    @FXML
+   private CheckBox cardAccountCheckBox;
+
+   @FXML
+   private CheckBox salaryAccountCheckBox;
+
+   @FXML
    private Label nameError;
 
    @FXML

@@ -25,6 +25,12 @@ public class NewAccountController {
    @FXML
    private CheckBox savingAccountCheckBox;
 
+   @FXML
+   private CheckBox cardAccountCheckBox;
+
+   @FXML
+   private CheckBox salaryAccountCheckBox;
+
    public BankAccount processResults() {
       BankAccount account = new BankAccount();
       account.setName(accountNameTextField.getText());
@@ -39,6 +45,20 @@ public class NewAccountController {
               .setAccountNumber(AccountNumberGenerator.generateUniqueNumber(SwedenBankDatasource.getInstance()));
 
       return account;
+   }
+
+   @FXML
+   private void savingAccountSelected() {
+      if (savingAccountCheckBox.isSelected()) {
+         cardAccountCheckBox.setSelected(false);
+      }
+   }
+
+   @FXML
+   private void cardAccountSelected() {
+      if (cardAccountCheckBox.isSelected()) {
+         savingAccountCheckBox.setSelected(false);
+      }
    }
 
    public TextField getAccountNameTextField() {

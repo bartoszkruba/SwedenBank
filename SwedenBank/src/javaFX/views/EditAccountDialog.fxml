@@ -22,10 +22,16 @@
             <Label text="Name Already Exist " fx:id="nameError" textFill="red" GridPane.columnIndex="2"
                    GridPane.rowIndex="0" visible="false"/>
 
-            <Label text="Saving Account:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="Savings Account:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="savingAccountCheckBox"/>
 
-            <Label text="Could not connect. Please try again" GridPane.columnIndex="0" GridPane.rowIndex="2"
+            <Label text="Card Account:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="cardAccountCheckBox"/>
+
+            <Label text="Salary Account:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="salaryAccountCheckBox"/>
+
+            <Label text="Could not connect. Please try again" GridPane.columnIndex="0" GridPane.rowIndex="4"
                    GridPane.columnSpan="3" visible="false" fx:id="connectionError"/>
         </GridPane>
     </content>

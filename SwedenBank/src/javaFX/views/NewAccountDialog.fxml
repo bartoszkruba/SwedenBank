@@ -18,13 +18,21 @@
         <GridPane vgap="10" hgap="10">
             <Label text="There is connection problem" textFill="red" GridPane.columnIndex="0" GridPane.rowIndex="0"
                    GridPane.columnSpan="3" visible="false" fx:id="connectionError"/>
-            <Label text="Account name: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label text="Account name: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
             <TextField fx:id="accountNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label fx:id="accountNameError" text="Account name already exist" GridPane.columnIndex="2"
                    GridPane.rowIndex="1" textFill="red" visible="false"/>
 
-            <Label text="Saving Account" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <CheckBox fx:id="savingAccountCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Savings Account" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <CheckBox fx:id="savingAccountCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                      onMouseClicked="#savingAccountSelected" onKeyPressed="#savingAccountSelected"/>
+
+            <Label text="Card Account" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <CheckBox fx:id="cardAccountCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                      onMouseClicked="#cardAccountSelected" onKeyPressed="#cardAccountSelected"/>
+
+            <Label text="Salary Account" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <CheckBox fx:id="salaryAccountCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
         </GridPane>
     </content>
