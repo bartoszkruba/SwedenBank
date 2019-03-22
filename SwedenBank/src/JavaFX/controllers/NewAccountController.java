@@ -9,6 +9,9 @@ import javafx.scene.control.TextField;
 public class NewAccountController {
 
    @FXML
+   private Label connectionError;
+
+   @FXML
    private TextField accountNameTextField;
 
    @FXML
@@ -28,5 +31,9 @@ public class NewAccountController {
 
    public CheckBox getSavingAccountCheckBox() {
       return savingAccountCheckBox;
+   }
+
+   public Label getConnectionError() {
+      return connectionError;
    }
 }

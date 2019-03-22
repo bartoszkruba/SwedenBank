@@ -264,32 +264,28 @@ public class MainWindowController {
       controller.getAccountError().setVisible(false);
       controller.getMoneyError().setVisible(false);
 
-      var returnValue = new Object() {
-         boolean returnValue;
-      };
-
-      returnValue.returnValue = true;
+      if (controller.getAmountField().getText().equals("")) {
+         return false;
+      }
 
       double amount = Double.parseDouble(controller.getAmountField().getText());
       String receiver = controller.getAccountNumberField().getText();
 
-      new Thread(() -> {
-         try {
-            double balance = swedenBankDatasource.queryAccountBalance(receiver);
-            if (amount > balance) {
-               Platform.runLater(() -> controller.getMoneyError().setVisible(true));
-               System.out.println("not enough money");
-               returnValue.returnValue = false;
-            }
-         } catch (IllegalStateException e) {
-            Platform.runLater(() -> controller.getAccountError().setVisible(true));
-            returnValue.returnValue = false;
-         } catch (Exception e) {
-            e.printStackTrace();
+      try {
+         double balance = swedenBankDatasource.queryAccountBalance(receiver);
+         if (amount > balance) {
+            Platform.runLater(() -> controller.getMoneyError().setVisible(true));
+            System.out.println("not enough money");
+            return false;
          }
-      }).start();
+      } catch (IllegalStateException e) {
+         Platform.runLater(() -> controller.getAccountError().setVisible(true));
+         return false;
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
 
-      return returnValue.returnValue;
+      return true;
    }
 
    @FXML
@@ -313,10 +309,12 @@ public class MainWindowController {
 
       Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
 
-//      NewTransactionController controller = fxmlLoader.getController();
+      NewAccountController controller = fxmlLoader.getController();
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-
+         if (!validateNewAccount(controller)) {
+            event.consume();
+         }
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
@@ -325,6 +323,26 @@ public class MainWindowController {
          System.out.println("Ok button pressed");
       }
 
+   }
+
+   private boolean validateNewAccount(NewAccountController controller) {
+      controller.getAccountNameError().setVisible(false);
+      controller.getConnectionError().setVisible(false);
+
+      String name = controller.getAccountNameTextField().getText();
+      String personNumber = state.getUser().getPersonNr();
+
+      try {
+         BankAccount account = swedenBankDatasource.queryAccountOnName(personNumber, name);
+         if (account != null) {
+            controller.getAccountNameError().setVisible(true);
+            return false;
+         }
+         return true;
+      } catch (Exception e) {
+         controller.getConnectionError().setVisible(true);
+         return false;
+      }
    }
 
    class ShowTransactions extends Task {

@@ -39,11 +39,16 @@ public class SwedenBankDatasource extends Datasource {
 
    private final String CALL_PROCEDURE_TRANSFER_MONEY = "CALL " + DBNames.PROCEDURE_TRANSFER_MONEY + "(?, ?, ?, ?)";
 
+   private final String QUERY_ACCOUNT_ON_NAME = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS + " " +
+           "WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? AND " +
+           DBNames.COLUMN_ACCOUNTS_NAME + " = ?";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
    private PreparedStatement queryAllTransactions;
    private PreparedStatement queryAccountBalance;
+   private PreparedStatement queryAccountOnName;
 
    private PreparedStatement callProcedureTransfer_money;
 
@@ -75,6 +80,7 @@ public class SwedenBankDatasource extends Datasource {
          queryTenTransactions = conn.prepareStatement(QUERY_TEN_TRANSACTIONS);
          queryAccountBalance = conn.prepareStatement(QUERY_ACCOUNT_BALANCE);
          queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
+         queryAccountOnName = conn.prepareStatement(QUERY_ACCOUNT_ON_NAME);
 
          callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
          return true;
@@ -93,6 +99,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(queryAccountBalance);
          closeStatement(callProcedureTransfer_money);
          closeStatement(queryAllTransactions);
+         closeStatement(queryAccountOnName);
 
          super.closeConnection();
          return true;
@@ -252,5 +259,25 @@ public class SwedenBankDatasource extends Datasource {
          return false;
       }
       return true;
+   }
+
+   public BankAccount queryAccountOnName(String accountNumber, String name) throws Exception {
+      try {
+         queryAccountOnName.setString(1, accountNumber);
+         queryAccountOnName.setString(2, name);
+
+         ResultSet result = queryAccountOnName.executeQuery();
+
+         if (result.isBeforeFirst()) {
+            result.next();
+            return accountObjectMapper.mapOne(result);
+         } else {
+            return null;
+         }
+
+      } catch (SQLException e) {
+         System.out.println("Couldn't query account: " + e.getMessage());
+         throw new Exception("Couldn't query account");
+      }
    }
 }
