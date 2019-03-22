@@ -51,6 +51,7 @@ public class MainWindowController {
    private void initialize() {
       swedenBankDatasource = SwedenBankDatasource.getInstance();
       state = State.getInstance();
+
       setUpAccountListView();
       setupTransactionTableView();
       loadAccounts();
@@ -184,12 +185,16 @@ public class MainWindowController {
          }
       }
 
-      Task<ObservableList<Transaction>> task = new Task<ObservableList<Transaction>>() {
-         @Override
-         protected ObservableList<Transaction> call() throws Exception {
-            return FXCollections.observableArrayList(transactions);
-         }
-      };
+      state.setTransactions(transactions);
+
+//      Task<ObservableList<Transaction>> task = new Task<ObservableList<Transaction>>() {
+//         @Override
+//         protected ObservableList<Transaction> call() throws Exception {
+//            return FXCollections.observableArrayList(state.getTransactions());
+//         }
+//      };
+
+      ShowTransactions task = new ShowTransactions();
 
       transactionTableView.itemsProperty().bind(task.valueProperty());
 
@@ -285,5 +290,12 @@ public class MainWindowController {
       }).start();
 
       return returnValue.returnValue;
+   }
+
+   class ShowTransactions extends Task {
+      @Override
+      protected Object call() throws Exception {
+         return FXCollections.observableArrayList(state.getTransactions());
+      }
    }
 }
