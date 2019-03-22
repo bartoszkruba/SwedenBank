@@ -18,6 +18,7 @@ public class State {
    private User user;
    private ObservableList<BankAccount> accounts;
    private ObservableList<Transaction> transactions;
+   private BankAccount currentAccount;
 
    private State() {
       user = new User();
@@ -49,5 +50,13 @@ public class State {
    public synchronized void setTransactions(List<Transaction> transactions) {
       this.transactions.clear();
       this.transactions.addAll(transactions);
+   }
+
+   public BankAccount getCurrentAccount() {
+      return currentAccount;
+   }
+
+   public void setCurrentAccount(BankAccount currentAccount) {
+      this.currentAccount = currentAccount;
    }
 }

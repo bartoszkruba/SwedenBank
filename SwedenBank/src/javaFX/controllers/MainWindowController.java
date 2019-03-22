@@ -105,8 +105,10 @@ public class MainWindowController {
             showMore_showLessBtn.setVisible(true);
             showMore_showLessBtn.setText("Show More");
             loadTransactions((BankAccount) newValue);
+            state.setCurrentAccount((BankAccount) newValue);
          } else {
             state.getTransactions().clear();
+            state.setCurrentAccount(null);
             showMore_showLessBtn.setVisible(false);
          }
       });
@@ -428,6 +430,7 @@ public class MainWindowController {
       Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
 
       DeleteAccountController controller = fxmlLoader.getController();
+
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
 

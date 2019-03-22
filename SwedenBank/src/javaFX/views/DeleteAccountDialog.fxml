@@ -16,7 +16,8 @@
     </headerText>
     <content>
         <GridPane>
-            <Label text="Choose Account: "/>
+            <Label text="Choose Account: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ChoiceBox GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="3" fx:id="accountChoiceBox"/>
         </GridPane>
     </content>
 </DialogPane>
