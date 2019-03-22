@@ -444,7 +444,26 @@ public class MainWindowController {
       Optional<ButtonType> result = dialog.showAndWait();
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
-         System.out.println("Account can be deleted");
+         String description = controller.getDescriptionField().getText();
+         boolean sqlResult =
+                 swedenBankDatasource.transferMoneyAndDeleteAccount(
+                         state.getCurrentAccount().getAccountNumber(),
+                         ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber(),
+                         description);
+         Alert alert;
+         if (sqlResult) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Account Deleted");
+            alert.setHeaderText("Account was deleted");
+            alert.setContentText("Money transferred to " + ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber());
+         } else {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Account could not be deleted");
+            alert.setContentText("Please try again");
+         }
+         alert.showAndWait();
+         loadAccounts();
       }
    }
 }

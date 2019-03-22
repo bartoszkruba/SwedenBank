@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import models.BankAccount;
 
@@ -16,6 +17,9 @@ public class DeleteAccountController {
 
    @FXML
    private Label accountError;
+
+   @FXML
+   TextField descriptionField;
 
    private ObservableList<BankAccount> accounts;
 
@@ -55,5 +59,9 @@ public class DeleteAccountController {
 
    public Label getAccountError() {
       return accountError;
+   }
+
+   public TextField getDescriptionField() {
+      return descriptionField;
    }
 }

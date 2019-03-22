@@ -43,12 +43,17 @@ public class SwedenBankDatasource extends Datasource {
            "WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? AND " +
            DBNames.COLUMN_ACCOUNTS_NAME + " = ?";
 
+   private final String DELETE_ACCOUNT = "DELETE FROM " + DBNames.TABLE_ACCOUNTS + " " +
+           "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
    private PreparedStatement queryAllTransactions;
    private PreparedStatement queryAccountBalance;
    private PreparedStatement queryAccountOnName;
+
+   private PreparedStatement deleteAccount;
 
    private PreparedStatement callProcedureTransfer_money;
 
@@ -82,6 +87,8 @@ public class SwedenBankDatasource extends Datasource {
          queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
          queryAccountOnName = conn.prepareStatement(QUERY_ACCOUNT_ON_NAME);
 
+         deleteAccount = conn.prepareStatement(DELETE_ACCOUNT);
+
          callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
          return true;
       } catch (SQLException e) {
@@ -100,6 +107,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(callProcedureTransfer_money);
          closeStatement(queryAllTransactions);
          closeStatement(queryAccountOnName);
+         closeStatement(deleteAccount);
 
          super.closeConnection();
          return true;
@@ -279,5 +287,59 @@ public class SwedenBankDatasource extends Datasource {
          System.out.println("Couldn't query account: " + e.getMessage());
          throw new Exception("Couldn't query account");
       }
+   }
+
+   public boolean transferMoneyAndDeleteAccount(String accountNr, String receiverNr, String description) {
+
+      try {
+         conn.setAutoCommit(false);
+         queryAccountBalance.setString(1, accountNr);
+         ResultSet result = queryAccountBalance.executeQuery();
+
+         result.next();
+         double balance = accountObjectMapper.mapOne(result).getBalance();
+
+         callProcedureTransfer_money.setString(1, accountNr);
+         callProcedureTransfer_money.setString(2, receiverNr);
+         callProcedureTransfer_money.setDouble(3, balance);
+         callProcedureTransfer_money.setString(4, description);
+
+         int affectedRows = callProcedureTransfer_money.executeUpdate();
+
+         if (affectedRows != 1) {
+            throw new SQLException("Update failed. Affected rows: " + affectedRows);
+         }
+
+         deleteAccount.setString(1, accountNr);
+
+         affectedRows = deleteAccount.executeUpdate();
+
+         if (affectedRows != 1) {
+            System.out.println("Uptade failed. Deleted rows: " + affectedRows);
+         }
+
+         try {
+            conn.setAutoCommit(true);
+         } catch (SQLException e) {
+            System.out.println("Could not set autocommit");
+         }
+
+         return true;
+
+      } catch (SQLException e) {
+         try {
+            System.out.println("Something went wrong " + e.getMessage());
+            System.out.println("Performing rollback");
+            conn.rollback();
+            try {
+               conn.setAutoCommit(true);
+            } catch (SQLException e2) {
+               System.out.println("Could not set autocommit");
+            }
+         } catch (SQLException e1) {
+            System.out.println("Could not rollback: " + e.getMessage());
+         }
+      }
+      return false;
    }
 }
