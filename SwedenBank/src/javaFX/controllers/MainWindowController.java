@@ -161,6 +161,15 @@ public class MainWindowController {
 
    private void setupTransactionTableView() {
 
+      setupColumnDescription();
+      setupColumnDate();
+      setupColumnAmount();
+      setupColumnSaldo();
+
+      transactionTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+   }
+
+   private void setupColumnDescription() {
       columnDescription.setCellValueFactory(new PropertyValueFactory<Transaction, String>("description"));
 
       columnDescription.setCellFactory(column -> {
@@ -182,7 +191,9 @@ public class MainWindowController {
 
          return cell;
       });
+   }
 
+   private void setupColumnDate() {
       columnDate.setCellValueFactory(new PropertyValueFactory<Transaction, Timestamp>("timestamp"));
 
 
@@ -203,7 +214,9 @@ public class MainWindowController {
          };
          return cell;
       });
+   }
 
+   private void setupColumnAmount() {
       columnAmount.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("amount"));
 
       columnAmount.setCellFactory(column -> {
@@ -228,7 +241,9 @@ public class MainWindowController {
          };
          return cell;
       });
+   }
 
+   private void setupColumnSaldo() {
       columnSaldo.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("saldo"));
 
       columnSaldo.setCellFactory(column -> {
@@ -248,8 +263,6 @@ public class MainWindowController {
          };
          return cell;
       });
-
-      transactionTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
    }
 
 
