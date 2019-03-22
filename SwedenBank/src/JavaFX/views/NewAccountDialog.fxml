@@ -15,7 +15,14 @@
     </headerText>
 
     <content>
-        <GridPane>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Account name: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="accountNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label fx:id="accountNameError" text="Account name already exist" GridPane.columnIndex="2"
+                   GridPane.rowIndex="0" textFill="red" visible="false"/>
+
+            <Label text="Saving Account" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <CheckBox fx:id="savingAccountCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         </GridPane>
     </content>
