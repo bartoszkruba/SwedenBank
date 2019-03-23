@@ -50,11 +50,12 @@ public class MainWindowController {
    private void setupTabPane() {
       tabPane.prefWidthProperty().bind(Main.primaryStage.widthProperty());
       try {
+         BorderPane overview = FXMLLoader.load(getClass().getResource("../views/tabs/OverviewTab.fxml"));
+         overviewTab.setContent(overview);
+
          BorderPane accounts = FXMLLoader.load(getClass().getResource("../views/tabs/AccountsTab.fxml"));
          accountsTab.setContent(accounts);
 
-         BorderPane overview = FXMLLoader.load(getClass().getResource("../views/tabs/OverviewTab.fxml"));
-         overviewTab.setContent(overview);
       } catch (IOException e) {
          System.out.println("Couldn't load view: " + e.getMessage());
       }

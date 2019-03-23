@@ -429,7 +429,6 @@ public class SwedenBankDatasource extends Datasource {
    public List<Transaction> queryTenTransactionsForUser(String personNr) {
       try {
          queryTenTransactionsForUser.setString(1, personNr);
-         System.out.println(queryTenTransactionsForUser);
          ResultSet results = queryTenTransactionsForUser.executeQuery();
 
          return transactionObjectMapper.map(results);

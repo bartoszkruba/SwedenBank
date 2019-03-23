@@ -2,6 +2,8 @@ package javaFX.controllers.tabs;
 
 import datasource.SwedenBankDatasource;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,19 +21,17 @@ import java.util.List;
 public class OverViewTabController {
 
    @FXML
-   TableView transactionTableView;
+   private TableView transactionTableView;
 
    @FXML
-   TableColumn columnDate;
+   private TableColumn columnDate;
 
    @FXML
-   TableColumn columnDescription;
+   private TableColumn columnDescription;
 
    @FXML
-   TableColumn columnAmount;
+   private TableColumn columnAmount;
 
-   @FXML
-   TableColumn columnSaldo;
 
    @FXML
    private Label firstName;
@@ -64,8 +64,7 @@ public class OverViewTabController {
 
       state.setOverViewTabController(this);
 
-//      setupTransactionTableView();
-      renderTransactions();
+      setupTransactionTableView();
       renderUserData();
       renderAddress();
    }
@@ -97,7 +96,6 @@ public class OverViewTabController {
       setupColumnDescription();
       setupColumnDate();
       setupColumnAmount();
-      setupColumnSaldo();
 
       transactionTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
    }
@@ -176,31 +174,37 @@ public class OverViewTabController {
       });
    }
 
-   private void setupColumnSaldo() {
-      columnSaldo.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("saldo"));
+   public void renderTransactions() {
+      ShowTransactions task = new ShowTransactions();
 
-      columnSaldo.setCellFactory(column -> {
-         TableCell cell = new TableCell<Transaction, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-               super.updateItem(item, empty);
+      transactionTableView.itemsProperty().bind(task.valueProperty());
 
-               String format = "%.2f";
+      new Thread(task).start();
 
-               if (item == null || empty) {
-                  setText(null);
-               } else {
-                  setText(String.format(format, item) + " (SEK)");
-               }
-            }
-         };
-         return cell;
-      });
    }
 
-   private void renderTransactions() {
-      List<Transaction> transactions = swedenBankDatasource.queryTenTransactionsForUser(state.getUser().getPersonNr());
-      transactions.forEach(t -> System.out.println(t.getDescription()));
+   private class ShowTransactions extends Task {
+      @Override
+      protected Object call() throws Exception {
+         List<Transaction> transactions = swedenBankDatasource.queryTenTransactionsForUser(state.getUser().getPersonNr());
+
+         ArrayList<String> accountNumbers = new ArrayList<>();
+
+         state.getAccounts().forEach(a -> {
+            accountNumbers.add(a.getAccountNumber());
+         });
+
+         for (Transaction t : transactions) {
+            for (String number : accountNumbers) {
+               if (number.equals(t.getSenderAccountNumber())) {
+                  t.setAmount(t.getAmount() * -1);
+                  break;
+               }
+            }
+         }
+
+         return FXCollections.observableArrayList(transactions);
+      }
    }
 
 }

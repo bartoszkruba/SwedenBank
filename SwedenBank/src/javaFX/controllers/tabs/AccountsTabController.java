@@ -300,6 +300,7 @@ public class AccountsTabController {
             if (state.getAccounts().size() != 0) {
                accountListView.getSelectionModel().selectFirst();
             }
+            state.getOverViewTabController().renderTransactions();
          });
       }).start();
    }
