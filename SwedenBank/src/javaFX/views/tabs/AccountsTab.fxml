@@ -57,19 +57,19 @@
             </Label>
             <GridPane vgap="10" hgap="10">
                 <Label text="Account Number:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <Label text="111111111111111" GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="accountNumber"/>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="accountNumber"/>
 
                 <Label text="Balance:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <Label text="203133.00 (SEK)" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="accountBalance"/>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="accountBalance"/>
 
                 <Label text="Savings Account:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <Label text="No" GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="savingsAccount"/>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="savingsAccount"/>
 
                 <Label text="Card Account:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <Label text="Yes" GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="cardAccount"/>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="cardAccount"/>
 
                 <Label text="Salary Account:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                <Label text="Yes" GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="salaryAccount"/>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="salaryAccount"/>
             </GridPane>
         </VBox>
     </right>

@@ -43,6 +43,20 @@ public class AccountsTabController {
    @FXML
    ContextMenu accountContextMenu;
 
+   @FXML
+   Label accountNumber;
+
+   @FXML
+   Label accountBalance;
+
+   @FXML
+   Label savingsAccount;
+
+   @FXML
+   Label cardAccount;
+
+   @FXML
+   Label salaryAccount;
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
 
@@ -110,6 +124,7 @@ public class AccountsTabController {
             showMore_showLessBtn.setText("Show More");
             loadTransactions((BankAccount) newValue);
             state.setCurrentAccount((BankAccount) newValue);
+            renderAccountDetails();
          } else {
             state.getTransactions().clear();
             state.setCurrentAccount(null);
@@ -139,6 +154,19 @@ public class AccountsTabController {
       });
 
       accountContextMenu.getItems().add(editMenuItem);
+   }
+
+   private void renderAccountDetails() {
+      BankAccount currentAcc = state.getCurrentAccount();
+
+      String format = "%.2f";
+      String balance = String.format(format, currentAcc.getBalance()) + " (SEK)";
+
+      accountNumber.setText(currentAcc.getAccountNumber());
+      accountBalance.setText(balance);
+      savingsAccount.setText(currentAcc.getSavingAccount().equals("Y") ? "Yes" : "No");
+      cardAccount.setText(currentAcc.getCardAccount().equals("Y") ? "Yes" : "No");
+      salaryAccount.setText(currentAcc.getSalaryAccount().equals("Y") ? "Yes" : "No");
    }
 
    private void deleteAccount(BankAccount account) {
