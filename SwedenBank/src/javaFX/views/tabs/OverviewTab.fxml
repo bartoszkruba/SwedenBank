@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="javaFX.controllers.tabs.OverViewTabController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <padding>
+        <Insets bottom="10.0" left="10.0" top="10"/>
+    </padding>
+
+    <left>
+        <VBox prefWidth="300">
+            <Label text="Contact Data:" alignment="TOP_CENTER">
+                <padding>
+                    <Insets bottom="25.0" top="25"/>
+                </padding>
+            </Label>
+            <GridPane vgap="10" hgap="10">
+                <padding>
+                    <Insets left="8.0"/>
+                </padding>
+                <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="firstName" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="lastName" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Personnummer:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="personnummer" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+                <Label text="Street:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Label fx:id="street" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="City" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Label fx:id="city" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                <Label text="Post Code:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <Label fx:id="postCode" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                <Label text="Country:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                <Label fx:id="country" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            </GridPane>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox alignment="TOP_CENTER">
+            <Label text="Last 10 Transactions: "/>
+            <TableView fx:id="transactionTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="columnDescription" text="Description:"/>
+                    <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;"/>
+                    <TableColumn fx:id="columnAmount" text="Amount:" style="-fx-alignment: CENTER-RIGHT;"/>
+                    <TableColumn fx:id="columnSaldo" text="Saldo:" style="-fx-alignment: CENTER-RIGHT;"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

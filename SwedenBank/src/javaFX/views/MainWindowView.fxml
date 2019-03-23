@@ -32,39 +32,7 @@
     <center>
         <TabPane fx:id="tabPane">
             <Tab fx:id="overviewTab" text="Overview" closable="false"/>
-            <Tab fx:id="accountsTab" text="Your Account" closable="false"/>
+            <Tab fx:id="accountsTab" text="Your Accounts" closable="false"/>
         </TabPane>
-        <!--<BorderPane>-->
-            <!--<center>-->
-                <!--<VBox alignment="TOP_CENTER">-->
-                    <!--<Label text="Transactions: ">-->
-                        <!--<padding>-->
-                            <!--<Insets bottom="10.0" left="6.0" top="6.0"/>-->
-                        <!--</padding>-->
-                    <!--</Label>-->
-                    <!--<TableView fx:id="transactionTableView" VBox.vgrow="ALWAYS">-->
-                        <!--<columns>-->
-                            <!--<TableColumn fx:id="columnDescription" text="Description:"/>-->
-                            <!--<TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;"/>-->
-                            <!--<TableColumn fx:id="columnAmount" text="Amount:" style="-fx-alignment: CENTER-RIGHT;"/>-->
-                            <!--<TableColumn fx:id="columnSaldo" text="Saldo:" style="-fx-alignment: CENTER-RIGHT;"/>-->
-                        <!--</columns>-->
-                    <!--</TableView>-->
-                    <!--<HBox alignment="CENTER_RIGHT">-->
-                        <!--<Button fx:id="showMore_showLessBtn" onAction="#showMore_Show_LessBtnClicked" text="Show More"/>-->
-                    <!--</HBox>-->
-                <!--</VBox>-->
-            <!--</center>-->
-            <!--<left>-->
-                <!--<VBox>-->
-                    <!--<Label text="Your Accounts:">-->
-                        <!--<padding>-->
-                            <!--<Insets bottom="10.0" left="6.0" top="6.0"/>-->
-                        <!--</padding>-->
-                    <!--</Label>-->
-                    <!--<ListView fx:id="accountListView" VBox.vgrow="ALWAYS"/>-->
-                <!--</VBox>-->
-            <!--</left>-->
-        <!--</BorderPane>-->
     </center>
 </BorderPane>

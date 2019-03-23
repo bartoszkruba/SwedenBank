@@ -51,12 +51,16 @@ public class SwedenBankDatasource extends Datasource {
            DBNames.COLUMN_ACCOUNT_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNT_SALARY_ACC + " = ? " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
+   private final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +
+           "WHERE " + DBNames.COLUMN_ADRS_ID + " = ?";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
    private PreparedStatement queryAllTransactions;
    private PreparedStatement queryAccountBalance;
    private PreparedStatement queryAccountOnName;
+   private PreparedStatement queryAddress;
 
    private PreparedStatement deleteAccount;
 
@@ -93,6 +97,7 @@ public class SwedenBankDatasource extends Datasource {
          queryAccountBalance = conn.prepareStatement(QUERY_ACCOUNT_BALANCE);
          queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
          queryAccountOnName = conn.prepareStatement(QUERY_ACCOUNT_ON_NAME);
+         queryAddress = conn.prepareStatement(QUERY_ADDRESS);
 
          deleteAccount = conn.prepareStatement(DELETE_ACCOUNT);
 
@@ -118,6 +123,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(queryAccountOnName);
          closeStatement(deleteAccount);
          closeStatement(updateAccount);
+         closeStatement(queryAddress);
 
          super.closeConnection();
          return true;
@@ -388,6 +394,23 @@ public class SwedenBankDatasource extends Datasource {
 
       } catch (SQLException e) {
          System.out.println("Couldn't update account: " + e.getMessage());
+      }
+   }
+
+   public Address queryAddress(Long addressId) {
+      try {
+         queryAddress.setLong(1, addressId);
+         ResultSet result = queryAddress.executeQuery();
+         if (result.isBeforeFirst()) {
+            result.next();
+            return addressObjectMapper.mapOne(result);
+         } else {
+            return null;
+         }
+
+      } catch (SQLException e) {
+         System.out.println("Couldn't query address: " + e.getMessage());
+         return null;
       }
    }
 }

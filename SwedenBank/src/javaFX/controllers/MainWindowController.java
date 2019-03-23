@@ -13,6 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import models.BankAccount;
 
 import java.io.IOException;
@@ -50,6 +52,9 @@ public class MainWindowController {
       try {
          BorderPane accounts = FXMLLoader.load(getClass().getResource("../views/tabs/AccountsTab.fxml"));
          accountsTab.setContent(accounts);
+
+         BorderPane overview = FXMLLoader.load(getClass().getResource("../views/tabs/OverviewTab.fxml"));
+         overviewTab.setContent(overview);
       } catch (IOException e) {
          System.out.println("Couldn't load view: " + e.getMessage());
       }
