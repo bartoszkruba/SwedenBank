@@ -5,10 +5,7 @@ import models.BankAccount;
 import models.Transaction;
 import models.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +51,18 @@ public class SwedenBankDatasource extends Datasource {
    private final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +
            "WHERE " + DBNames.COLUMN_ADRS_ID + " = ?";
 
+   private final String QUERY_TEN_TRANSACTIONS_FOR_USER = "SELECT " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " +
+           DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_DESC + ", " +
+           DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
+           "FROM " + DBNames.TABLE_USERS + " AS u " + " " +
+           "INNER JOIN " + DBNames.TABLE_ACCOUNTS + " AS a " + " ON a." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = u." + DBNames.COLUMN_USERS_PERSON_NR + " " +
+           "INNER JOIN " + DBNames.TABLE_TRANSACTIONS + " AS t " + " ON t." + DBNames.COLUMN_TRANSACTIONS_SENDER + " = a." +
+           DBNames.COLUMN_ACCOUNTS_NUMBER + " OR t." + DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = a." + DBNames.COLUMN_ACCOUNTS_NUMBER + " " +
+           "WHERE " + DBNames.COLUMN_USERS_PERSON_NR + " = ? " +
+           "GROUP BY " + DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " + " " +
+           DBNames.COLUMN_TRANSACTIONS_DESC + ", " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
+           "HAVING COUNT(*) = 1 ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
+
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
@@ -61,6 +70,7 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryAccountBalance;
    private PreparedStatement queryAccountOnName;
    private PreparedStatement queryAddress;
+   private PreparedStatement queryTenTransactionsForUser;
 
    private PreparedStatement deleteAccount;
 
@@ -98,6 +108,7 @@ public class SwedenBankDatasource extends Datasource {
          queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
          queryAccountOnName = conn.prepareStatement(QUERY_ACCOUNT_ON_NAME);
          queryAddress = conn.prepareStatement(QUERY_ADDRESS);
+         queryTenTransactionsForUser = conn.prepareStatement(QUERY_TEN_TRANSACTIONS_FOR_USER);
 
          deleteAccount = conn.prepareStatement(DELETE_ACCOUNT);
 
@@ -124,6 +135,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(deleteAccount);
          closeStatement(updateAccount);
          closeStatement(queryAddress);
+         closeStatement(queryTenTransactionsForUser);
 
          super.closeConnection();
          return true;
@@ -410,6 +422,19 @@ public class SwedenBankDatasource extends Datasource {
 
       } catch (SQLException e) {
          System.out.println("Couldn't query address: " + e.getMessage());
+         return null;
+      }
+   }
+
+   public List<Transaction> queryTenTransactionsForUser(String personNr) {
+      try {
+         queryTenTransactionsForUser.setString(1, personNr);
+         System.out.println(queryTenTransactionsForUser);
+         ResultSet results = queryTenTransactionsForUser.executeQuery();
+
+         return transactionObjectMapper.map(results);
+      } catch (SQLException e) {
+         System.out.println("Couldn't query transactions: " + e.getMessage());
          return null;
       }
    }

@@ -13,6 +13,8 @@ import javaFX.State;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OverViewTabController {
 
@@ -62,7 +64,8 @@ public class OverViewTabController {
 
       state.setOverViewTabController(this);
 
-      setupTransactionTableView();
+//      setupTransactionTableView();
+      renderTransactions();
       renderUserData();
       renderAddress();
    }
@@ -193,6 +196,11 @@ public class OverViewTabController {
          };
          return cell;
       });
+   }
+
+   private void renderTransactions() {
+      List<Transaction> transactions = swedenBankDatasource.queryTenTransactionsForUser(state.getUser().getPersonNr());
+      transactions.forEach(t -> System.out.println(t.getDescription()));
    }
 
 }

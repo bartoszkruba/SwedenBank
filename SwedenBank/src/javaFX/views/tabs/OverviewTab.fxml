@@ -61,7 +61,6 @@
                     <TableColumn fx:id="columnDescription" text="Description:"/>
                     <TableColumn fx:id="columnDate" text="Date: " style="-fx-alignment: CENTER-RIGHT;"/>
                     <TableColumn fx:id="columnAmount" text="Amount:" style="-fx-alignment: CENTER-RIGHT;"/>
-                    <TableColumn fx:id="columnSaldo" text="Saldo:" style="-fx-alignment: CENTER-RIGHT;"/>
                 </columns>
             </TableView>
         </VBox>
