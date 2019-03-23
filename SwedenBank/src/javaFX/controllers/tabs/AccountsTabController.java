@@ -78,7 +78,10 @@ public class AccountsTabController {
                   if (empty) {
                      setText(null);
                   } else {
-                     String text = item.getName() + " (" + item.getBalance() + " SEK)";
+                     String format = "%.2f";
+                     String text = item.getName() + " ("
+                             + String.format(format, item.getBalance()) +
+                             " SEK)";
                      if (item.getSavingAccount().equals("Y")) {
                         text = text + " \uD83C\uDFE6";
                      }
