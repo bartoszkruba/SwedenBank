@@ -1,56 +1,36 @@
 package javaFX.controllers;
 
+import javaFX.Main;
 import javaFX.State;
 import datasource.SwedenBankDatasource;
+import javaFX.controllers.dialogs.DeleteAccountController;
+import javaFX.controllers.dialogs.EditAccountController;
+import javaFX.controllers.dialogs.NewAccountController;
+import javaFX.controllers.dialogs.NewTransactionController;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
-import javafx.util.Callback;
 import models.BankAccount;
-import models.Transaction;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 public class MainWindowController {
 
    @FXML
-   ListView accountListView;
-
-   @FXML
-   TableView transactionTableView;
-
-   @FXML
-   TableColumn columnDate;
-
-   @FXML
-   TableColumn columnDescription;
-
-   @FXML
-   TableColumn columnAmount;
-
-   @FXML
-   TableColumn columnSaldo;
-
-   @FXML
-   Button showMore_showLessBtn;
-
-   @FXML
    BorderPane mainBorderPane;
 
    @FXML
-   ContextMenu accountContextMenu;
+   TabPane tabPane;
+
+   @FXML
+   Tab accountsTab;
+
+   @FXML
+   Tab overviewTab;
 
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
@@ -60,267 +40,19 @@ public class MainWindowController {
       swedenBankDatasource = SwedenBankDatasource.getInstance();
       state = State.getInstance();
 
-      accountContextMenu = new ContextMenu();
+      state.setMainWindowController(this);
 
-      setUpAccountListView();
-      setupTransactionTableView();
-      loadAccounts();
+      setupTabPane();
    }
 
-   private void setUpAccountListView() {
-      accountListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-      addDeleteToContextMenu();
-      addEditContextMenu();
-
-      accountListView.setCellFactory(new Callback<ListView, ListCell>() {
-         @Override
-         public ListCell call(ListView param) {
-            ListCell<BankAccount> cell = new ListCell<>() {
-               @Override
-               protected void updateItem(BankAccount item, boolean empty) {
-                  super.updateItem(item, empty);
-                  if (empty) {
-                     setText(null);
-                  } else {
-                     String text = item.getName() + " (" + item.getBalance() + " SEK)";
-                     if (item.getSavingAccount().equals("Y")) {
-                        text = text + " \uD83C\uDFE6";
-                     }
-                     if (item.getSalaryAccount().equals("Y")) {
-                        text = text + " \uD83D\uDCB8";
-                     }
-                     setText(text);
-                  }
-               }
-            };
-
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-               if (isNowEmpty) {
-                  cell.setContextMenu(null);
-               } else {
-                  cell.setContextMenu(accountContextMenu);
-               }
-            });
-            return cell;
-         }
-      });
-
-      accountListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-         if (newValue != null) {
-            showMore_showLessBtn.setVisible(true);
-            showMore_showLessBtn.setText("Show More");
-            loadTransactions((BankAccount) newValue);
-            state.setCurrentAccount((BankAccount) newValue);
-         } else {
-            state.getTransactions().clear();
-            state.setCurrentAccount(null);
-            showMore_showLessBtn.setVisible(false);
-         }
-      });
-
-      accountListView.setItems(state.getAccounts());
-   }
-
-   private void addDeleteToContextMenu() {
-      MenuItem deleteMenuItem = new MenuItem("Delete Account");
-      deleteMenuItem.setOnAction(event -> {
-         BankAccount account = ((BankAccount) accountListView.getSelectionModel().getSelectedItem());
-         deleteAccount(account);
-      });
-
-      accountContextMenu.getItems().add(deleteMenuItem);
-
-   }
-
-   private void addEditContextMenu() {
-      MenuItem editMenuItem = new MenuItem("Edit Account");
-      editMenuItem.setOnAction(event -> {
-         BankAccount account = ((BankAccount) accountListView.getSelectionModel().getSelectedItem());
-         editAccount(account);
-      });
-
-      accountContextMenu.getItems().add(editMenuItem);
-   }
-
-   private void deleteAccount(BankAccount account) {
-      if (accountListView.getItems().size() == 1) {
-         Alert alert = new Alert(Alert.AlertType.WARNING);
-         alert.setTitle("There's a problem");
-         alert.setHeaderText("Unable to delete account");
-         alert.setContentText("\"" + account.getName() + "\" is your only account");
-         alert.showAndWait();
-      } else {
-         showDeleteAccountDialog();
+   private void setupTabPane() {
+      tabPane.prefWidthProperty().bind(Main.primaryStage.widthProperty());
+      try {
+         BorderPane accounts = FXMLLoader.load(getClass().getResource("../views/tabs/AccountsTab.fxml"));
+         accountsTab.setContent(accounts);
+      } catch (IOException e) {
+         System.out.println("Couldn't load view: " + e.getMessage());
       }
-   }
-
-   private void editAccount(BankAccount account) {
-      showEditAccountDialog();
-   }
-
-   private void setupTransactionTableView() {
-
-      setupColumnDescription();
-      setupColumnDate();
-      setupColumnAmount();
-      setupColumnSaldo();
-
-      transactionTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-   }
-
-   private void setupColumnDescription() {
-      columnDescription.setCellValueFactory(new PropertyValueFactory<Transaction, String>("description"));
-
-      columnDescription.setCellFactory(column -> {
-         TableCell cell = new TableCell<Transaction, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-               super.updateItem(item, empty);
-
-               if (item == null || empty) {
-                  setText(null);
-                  setGraphic(null);
-               } else {
-                  Text text = new Text(item);
-                  text.setWrappingWidth(300);
-                  setGraphic(text);
-               }
-            }
-         };
-
-         return cell;
-      });
-   }
-
-   private void setupColumnDate() {
-      columnDate.setCellValueFactory(new PropertyValueFactory<Transaction, Timestamp>("timestamp"));
-
-
-      columnDate.setCellFactory(column -> {
-         TableCell cell = new TableCell<Transaction, Timestamp>() {
-            @Override
-            protected void updateItem(Timestamp item, boolean empty) {
-               super.updateItem(item, empty);
-
-               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd, HH:mm");
-
-               if (item == null || empty) {
-                  setText(null);
-               } else {
-                  setText(formatter.format(item.toLocalDateTime()));
-               }
-            }
-         };
-         return cell;
-      });
-   }
-
-   private void setupColumnAmount() {
-      columnAmount.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("amount"));
-
-      columnAmount.setCellFactory(column -> {
-         TableCell cell = new TableCell<Transaction, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-               super.updateItem(item, empty);
-
-               String format = "%.2f";
-
-               if (item == null || empty) {
-                  setText(null);
-               } else {
-                  StringBuilder sb = new StringBuilder();
-                  if (item > 0) {
-                     sb.append("+");
-                  }
-                  sb.append(String.format(format, item) + " (SEK)");
-                  setText(sb.toString());
-               }
-            }
-         };
-         return cell;
-      });
-   }
-
-   private void setupColumnSaldo() {
-      columnSaldo.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("saldo"));
-
-      columnSaldo.setCellFactory(column -> {
-         TableCell cell = new TableCell<Transaction, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-               super.updateItem(item, empty);
-
-               String format = "%.2f";
-
-               if (item == null || empty) {
-                  setText(null);
-               } else {
-                  setText(String.format(format, item) + " (SEK)");
-               }
-            }
-         };
-         return cell;
-      });
-   }
-
-
-   private void loadAccounts() {
-      new Thread(() -> {
-         List<BankAccount> accounts;
-         accounts = swedenBankDatasource.queryAccountsForUser(state.getUser().getPersonNr());
-         Platform.runLater(() -> {
-            state.setAccounts(accounts);
-            if (state.getAccounts().size() != 0) {
-               accountListView.getSelectionModel().selectFirst();
-            }
-         });
-      }).start();
-   }
-
-   private void loadTransactions(BankAccount account) {
-
-      String currentAccountNumber = account.getAccountNumber();
-
-      List<Transaction> transactions;
-
-      if (showMore_showLessBtn.getText().equals("Show Less")) {
-         transactions = swedenBankDatasource.queryAllTransactions(currentAccountNumber);
-      } else {
-         transactions = swedenBankDatasource.queryTenTransactions(currentAccountNumber);
-      }
-
-      double accountSaldo = account.getBalance();
-
-      if (transactions != null) {
-         for (Transaction t : transactions) {
-            t.setSaldo(accountSaldo);
-            if (t.getSenderAccountNumber().equals(currentAccountNumber)) {
-               t.setAmount(t.getAmount() * -1);
-            } else {
-               t.setAmount(t.getAmount());
-            }
-            accountSaldo += t.getAmount() * -1;
-         }
-      }
-
-      state.setTransactions(transactions);
-
-      ShowTransactions task = new ShowTransactions();
-
-      transactionTableView.itemsProperty().bind(task.valueProperty());
-
-      new Thread(task).start();
-   }
-
-   @FXML
-   private void showMore_Show_LessBtnClicked() {
-      showMore_showLessBtn.setDisable(true);
-      String newText = showMore_showLessBtn.getText().equals("Show More") ? "Show Less" : "Show More";
-      loadTransactions((BankAccount) accountListView.getSelectionModel().getSelectedItem());
-      showMore_showLessBtn.setText(newText);
-      showMore_showLessBtn.setDisable(false);
    }
 
    @FXML
@@ -334,7 +66,7 @@ public class MainWindowController {
       dialog.setTitle("New Transaction");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
-      fxmlLoader.setLocation(getClass().getResource("../views/NewTransactionDialog.fxml"));
+      fxmlLoader.setLocation(getClass().getResource("../views/dialogs/NewTransactionDialog.fxml"));
       try {
          dialog.getDialogPane().setContent(fxmlLoader.load());
       } catch (IOException e) {
@@ -368,7 +100,8 @@ public class MainWindowController {
 
          new Thread(() -> {
             swedenBankDatasource.callProcedureTransfer_money(sender, receiver, amount, description);
-            Platform.runLater(() -> loadAccounts());
+
+            Platform.runLater(() -> state.getAccountsTabController().loadAccounts());
          }).start();
       }
    }
@@ -408,7 +141,7 @@ public class MainWindowController {
       dialog.setTitle("New Account");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
-      fxmlLoader.setLocation(getClass().getResource("../views/NewAccountDialog.fxml"));
+      fxmlLoader.setLocation(getClass().getResource("../views/dialogs/NewAccountDialog.fxml"));
       try {
          dialog.getDialogPane().setContent(fxmlLoader.load());
       } catch (IOException e) {
@@ -437,7 +170,7 @@ public class MainWindowController {
             BankAccount account = controller.processResults();
             swedenBankDatasource.insertIntoTable(account);
             Platform.runLater(() -> {
-               loadAccounts();
+               state.getAccountsTabController().loadAccounts();
             });
          }).start();
       }
@@ -467,13 +200,13 @@ public class MainWindowController {
    }
 
 
-   private void showDeleteAccountDialog() {
+   public void showDeleteAccountDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
       dialog.initOwner(mainBorderPane.getScene().getWindow());
       dialog.setTitle("Delete Account");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
-      fxmlLoader.setLocation(getClass().getResource("../views/DeleteAccountDialog.fxml"));
+      fxmlLoader.setLocation(getClass().getResource("../views/dialogs/DeleteAccountDialog.fxml"));
       try {
          dialog.getDialogPane().setContent(fxmlLoader.load());
       } catch (IOException e) {
@@ -521,17 +254,17 @@ public class MainWindowController {
             alert.setContentText("Please try again");
          }
          alert.showAndWait();
-         loadAccounts();
+         state.getAccountsTabController().loadAccounts();
       }
    }
 
-   private void showEditAccountDialog() {
+   public void showEditAccountDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
       dialog.initOwner(mainBorderPane.getScene().getWindow());
       dialog.setTitle("Edit Account");
 
       FXMLLoader fxmlLoader = new FXMLLoader();
-      fxmlLoader.setLocation(getClass().getResource("../views/EditAccountDialog.fxml"));
+      fxmlLoader.setLocation(getClass().getResource("../views/dialogs/EditAccountDialog.fxml"));
       try {
          dialog.getDialogPane().setContent(fxmlLoader.load());
       } catch (IOException e) {
@@ -551,10 +284,26 @@ public class MainWindowController {
 
       String savingAccount = state.getCurrentAccount().getSavingAccount();
 
+      String cardAccount = state.getCurrentAccount().getCardAccount();
+
+      String salaryAccount = state.getCurrentAccount().getSalaryAccount();
+
       if (savingAccount.equals("Y")) {
          controller.getSavingAccountCheckBox().setSelected(true);
       } else {
          controller.getSavingAccountCheckBox().setSelected(false);
+      }
+
+      if (cardAccount.equals("Y")) {
+         controller.getCardAccountCheckBox().setSelected(true);
+      } else {
+         controller.getCardAccountCheckBox().setSelected(false);
+      }
+
+      if (salaryAccount.equals("Y")) {
+         controller.getSalaryAccountCheckBox().setSelected(true);
+      } else {
+         controller.getSalaryAccountCheckBox().setSelected(false);
       }
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
@@ -578,19 +327,17 @@ public class MainWindowController {
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
          String newName = controller.getAccountNameField().getText();
+
          boolean isSavingAccount = controller.getSavingAccountCheckBox().isSelected();
+         boolean isCardAccount = controller.getCardAccountCheckBox().isSelected();
+         boolean isSalaryAccount = controller.getSalaryAccountCheckBox().isSelected();
+
          String accountNumber = state.getCurrentAccount().getAccountNumber();
 
-         swedenBankDatasource.updateAccount(accountNumber, newName, isSavingAccount);
+         swedenBankDatasource.updateAccount(accountNumber, newName, isSavingAccount, isCardAccount, isSalaryAccount);
 
-         loadAccounts();
+         state.getAccountsTabController().loadAccounts();
       }
    }
 
-   class ShowTransactions extends Task {
-      @Override
-      protected Object call() throws Exception {
-         return FXCollections.observableArrayList(state.getTransactions());
-      }
-   }
 }

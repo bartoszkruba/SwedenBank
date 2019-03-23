@@ -47,7 +47,8 @@ public class SwedenBankDatasource extends Datasource {
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    private final String UPDATE_ACCOUNT = "UPDATE " + DBNames.TABLE_ACCOUNTS + " " +
-           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNT_SAVING_ACC + " = ? " +
+           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNT_SAVING_ACC + " = ?, " +
+           DBNames.COLUMN_ACCOUNT_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNT_SALARY_ACC + " = ? " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    private PreparedStatement queryUser;
@@ -237,6 +238,9 @@ public class SwedenBankDatasource extends Datasource {
          if (!checkAccountBalance(sender, amount)) {
             return;
          }
+         if (amount == 0) {
+            return;
+         }
       } catch (SQLException e) {
          System.out.println("couldn't query account balance: " + e.getMessage());
          return;
@@ -308,15 +312,19 @@ public class SwedenBankDatasource extends Datasource {
          result.next();
          double balance = accountObjectMapper.mapOne(result).getBalance();
 
-         callProcedureTransfer_money.setString(1, accountNr);
-         callProcedureTransfer_money.setString(2, receiverNr);
-         callProcedureTransfer_money.setDouble(3, balance);
-         callProcedureTransfer_money.setString(4, description);
+         int affectedRows;
 
-         int affectedRows = callProcedureTransfer_money.executeUpdate();
+         if (balance != 0) {
+            callProcedureTransfer_money.setString(1, accountNr);
+            callProcedureTransfer_money.setString(2, receiverNr);
+            callProcedureTransfer_money.setDouble(3, balance);
+            callProcedureTransfer_money.setString(4, description);
 
-         if (affectedRows != 1) {
-            throw new SQLException("Update failed. Affected rows: " + affectedRows);
+            affectedRows = callProcedureTransfer_money.executeUpdate();
+
+            if (affectedRows != 1) {
+               throw new SQLException("Update failed. Affected rows: " + affectedRows);
+            }
          }
 
          deleteAccount.setString(1, accountNr);
@@ -352,7 +360,8 @@ public class SwedenBankDatasource extends Datasource {
       return false;
    }
 
-   public void updateAccount(String accountNumber, String accountName, boolean savingAccount) {
+   public void updateAccount(String accountNumber, String accountName, boolean savingAccount,
+                             boolean cardAccount, boolean salaryAccount) {
       try {
          updateAccount.setString(1, accountName);
          if (savingAccount) {
@@ -360,7 +369,20 @@ public class SwedenBankDatasource extends Datasource {
          } else {
             updateAccount.setString(2, "N");
          }
-         updateAccount.setString(3, accountNumber);
+
+         if (cardAccount) {
+            updateAccount.setString(3, "Y");
+         } else {
+            updateAccount.setString(3, "N");
+         }
+
+         if (salaryAccount) {
+            updateAccount.setString(4, "Y");
+         } else {
+            updateAccount.setString(4, "N");
+         }
+
+         updateAccount.setString(5, accountNumber);
 
          updateAccount.executeUpdate();
 

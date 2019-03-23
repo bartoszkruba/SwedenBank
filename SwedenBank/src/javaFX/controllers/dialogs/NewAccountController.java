@@ -1,4 +1,4 @@
-package javaFX.controllers;
+package javaFX.controllers.dialogs;
 
 import datasource.SwedenBankDatasource;
 import javafx.fxml.FXML;
@@ -39,6 +39,18 @@ public class NewAccountController {
          account.setSavingAccount("Y");
       } else {
          account.setSavingAccount("N");
+      }
+
+      if (cardAccountCheckBox.isSelected()) {
+         account.setCardAccount("Y");
+      } else {
+         account.setCardAccount("N");
+      }
+
+      if (salaryAccountCheckBox.isSelected()) {
+         account.setSalaryAccount("Y");
+      } else {
+         account.setSalaryAccount("N");
       }
 
       account.setPersonNumber(State.getInstance().getUser().getPersonNr())

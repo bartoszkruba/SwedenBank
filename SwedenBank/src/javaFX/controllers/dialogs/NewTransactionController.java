@@ -1,4 +1,4 @@
-package javaFX.controllers;
+package javaFX.controllers.dialogs;
 
 import javaFX.State;
 import javafx.collections.FXCollections;

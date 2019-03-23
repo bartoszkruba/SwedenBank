@@ -1,4 +1,4 @@
-package javaFX.controllers;
+package javaFX.controllers.dialogs;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -26,6 +26,20 @@ public class EditAccountController {
    @FXML
    private Label connectionError;
 
+   @FXML
+   private void cardAccountSelected() {
+      if (cardAccountCheckBox.isSelected()) {
+         savingAccountCheckBox.setSelected(false);
+      }
+   }
+
+   @FXML
+   private void savingsAccountSelected() {
+      if (savingAccountCheckBox.isSelected()) {
+         cardAccountCheckBox.setSelected(false);
+      }
+   }
+
    public TextField getAccountNameField() {
       return accountNameField;
    }
@@ -40,6 +54,14 @@ public class EditAccountController {
 
    public Label getConnectionError() {
       return connectionError;
+   }
+
+   public CheckBox getCardAccountCheckBox() {
+      return cardAccountCheckBox;
+   }
+
+   public CheckBox getSalaryAccountCheckBox() {
+      return salaryAccountCheckBox;
    }
 }
 

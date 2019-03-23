@@ -40,6 +40,10 @@ public class BankAccount {
    @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
    private String isSalaryAccount;
 
+   @Column(DBNames.COLUMN_ACCOUNT_CARD_ACC)
+   @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
+   private String isCardAccount;
+
    @Column(DBNames.COLUMN_ACCOUNT_OPENED_ON)
    @KeyDescription("TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
    private Timestamp openedOn;
@@ -101,5 +105,14 @@ public class BankAccount {
 
    public Timestamp getOpenedOn() {
       return openedOn;
+   }
+
+   public String getCardAccount() {
+      return isCardAccount;
+   }
+
+   public BankAccount setCardAccount(String isCardAccount) {
+      this.isCardAccount = isCardAccount;
+      return this;
    }
 }

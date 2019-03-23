@@ -52,7 +52,8 @@ public class InsertData {
       account.setAccountNumber("11112222333344")
               .setName("My Account")
               .setPersonNumber("111122223333")
-              .setSalaryAccount("Y");
+              .setSalaryAccount("Y")
+              .setCardAccount("Y");
 
       swedenBankDatasource.insertIntoTable(account);
 

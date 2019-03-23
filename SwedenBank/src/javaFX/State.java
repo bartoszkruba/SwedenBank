@@ -1,7 +1,10 @@
 package javaFX;
 
+import javaFX.controllers.MainWindowController;
+import javaFX.controllers.tabs.AccountsTabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.BorderPane;
 import models.BankAccount;
 import models.Transaction;
 import models.User;
@@ -19,6 +22,9 @@ public class State {
    private ObservableList<BankAccount> accounts;
    private ObservableList<Transaction> transactions;
    private BankAccount currentAccount;
+
+   private MainWindowController mainWindowController;
+   private AccountsTabController accountsTabController;
 
    private State() {
       user = new User();
@@ -58,5 +64,21 @@ public class State {
 
    public void setCurrentAccount(BankAccount currentAccount) {
       this.currentAccount = currentAccount;
+   }
+
+   public MainWindowController getMainWindowController() {
+      return mainWindowController;
+   }
+
+   public void setMainWindowController(MainWindowController mainWindowController) {
+      this.mainWindowController = mainWindowController;
+   }
+
+   public AccountsTabController getAccountsTabController() {
+      return accountsTabController;
+   }
+
+   public void setAccountsTabController(AccountsTabController accountsTabController) {
+      this.accountsTabController = accountsTabController;
    }
 }

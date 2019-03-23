@@ -8,7 +8,7 @@
 
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="javaFX.controllers.EditAccountController"
+            fx:controller="javaFX.controllers.dialogs.EditAccountController"
             prefHeight="400.0" prefWidth="600.0">
 
     <headerText>
@@ -23,10 +23,12 @@
                    GridPane.rowIndex="0" visible="false"/>
 
             <Label text="Savings Account:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="savingAccountCheckBox"/>
+            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="savingAccountCheckBox"
+                      onMouseClicked="#savingsAccountSelected" onKeyPressed="#savingsAccountSelected"/>
 
             <Label text="Card Account:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="cardAccountCheckBox"/>
+            <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="cardAccountCheckBox"
+                      onMouseClicked="#cardAccountSelected" onKeyPressed="#cardAccountSelected"/>
 
             <Label text="Salary Account:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="salaryAccountCheckBox"/>

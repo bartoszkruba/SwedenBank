@@ -32,6 +32,7 @@ public class DBNames {
    public static final String COLUMN_ACCOUNTS_BALANCE = "balance";
    public static final String COLUMN_ACCOUNT_SAVING_ACC = "is_saving_account";
    public static final String COLUMN_ACCOUNT_SALARY_ACC = "is_salary_account";
+   public static final String COLUMN_ACCOUNT_CARD_ACC = "is_card_account";
    public static final String COLUMN_ACCOUNT_OPENED_ON = "opened_on";
 
    public static final String TABLE_TRANSACTIONS = "transactions";
