@@ -28,6 +28,8 @@
 
             <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="datePicker"/>
+            <Label text="Choose Date" GridPane.columnIndex="2" GridPane.rowIndex="2" fx:id="dateError" textFill="red"
+                   visible="false"/>
 
             <Label text="Description: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <TextField GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="3" fx:id="descriptonField"/>

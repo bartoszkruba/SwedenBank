@@ -169,5 +169,40 @@ public class Datasource {
       }
    }
 
+   public void turnOnScheduledEvents() {
+      if (conn == null) {
+         System.out.println("Connection is not open");
+         return;
+      }
+
+      try {
+         Statement statement = conn.createStatement();
+
+         System.out.println(statement);
+
+         statement.executeUpdate("SET GLOBAL event_scheduler = ON;");
+      } catch (SQLException e) {
+         System.out.println("Couldn't turn on scheduled events: " + e.getMessage());
+      }
+   }
+
+   public void turnOffScheduledEvents() {
+      if (conn == null) {
+         System.out.println("Connection is not open");
+         return;
+      }
+
+
+      try {
+         Statement statement = conn.createStatement();
+
+         System.out.println(statement);
+
+         statement.executeUpdate("SET GLOBAL event_scheduler = OFF;");
+      } catch (SQLException e) {
+         System.out.println("Couldn't turn off scheduled events: " + e.getMessage());
+      }
+   }
+
 }
 

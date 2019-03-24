@@ -1,9 +1,6 @@
 package datasource;
 
-import models.Address;
-import models.BankAccount;
-import models.Transaction;
-import models.User;
+import models.*;
 
 public class InsertData {
 
@@ -20,12 +17,15 @@ public class InsertData {
       swedenBankDatasource.dropTable(User.class);
       swedenBankDatasource.dropTable(Address.class);
 
+      swedenBankDatasource.turnOnScheduledEvents();
+
       swedenBankDatasource.createProcedureTransfer_money();
 
       swedenBankDatasource.createTable(Address.class);
       swedenBankDatasource.createTable(User.class);
       swedenBankDatasource.createTable(BankAccount.class);
       swedenBankDatasource.createTable(Transaction.class);
+      swedenBankDatasource.createTable(ScheduledTransaction.class);
 
       System.out.println();
 

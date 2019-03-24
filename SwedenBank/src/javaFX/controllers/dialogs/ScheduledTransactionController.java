@@ -1,6 +1,8 @@
 package javaFX.controllers.dialogs;
 
+import datasource.SwedenBankDatasource;
 import javaFX.State;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,9 +10,10 @@ import javafx.scene.control.*;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import models.BankAccount;
+import models.ScheduledTransaction;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.function.UnaryOperator;
 
 public class ScheduledTransactionController {
@@ -29,6 +32,9 @@ public class ScheduledTransactionController {
 
    @FXML
    private Label moneyError;
+
+   @FXML
+   private Label dateError;
 
    @FXML
    DatePicker datePicker;
@@ -103,6 +109,56 @@ public class ScheduledTransactionController {
       datePicker.setDayCellFactory(dayCellFactory);
    }
 
+   public boolean validateScheduledTransaction() {
+      accountError.setVisible(false);
+      moneyError.setVisible(false);
+      dateError.setVisible(false);
+
+      if (datePicker.getValue() == null) {
+         dateError.setVisible(true);
+      }
+
+      if (amountField.getText().equals("")) {
+         return false;
+      }
+
+      double amount = Double.parseDouble(amountField.getText());
+      String receiver = accountNumberField.getText();
+
+      try {
+         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(receiver);
+         if (amount > balance) {
+            Platform.runLater(() -> moneyError.setVisible(true));
+            System.out.println("not enough money");
+            return false;
+         }
+      } catch (IllegalStateException e) {
+         Platform.runLater(() -> accountError.setVisible(true));
+         return false;
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+
+      return true;
+   }
+
+   public ScheduledTransaction processResults() {
+      Date date = Date.valueOf(datePicker.getValue());
+      String description = descriptonField.getText();
+      String sender = ((BankAccount) accountChoiceBox.getSelectionModel().getSelectedItem()).getAccountNumber();
+      String receiver = accountNumberField.getText();
+      double amount = Double.parseDouble(amountField.getText());
+
+      ScheduledTransaction transaction = new ScheduledTransaction();
+      transaction.setDate(date)
+              .setDescription(description)
+              .setSenderAccountNumber(sender)
+              .setReceiverAccountNumber(receiver)
+              .setAmount(amount);
+
+      return transaction;
+   }
+
    public TextField getAmountField() {
       return amountField;
    }
@@ -125,5 +181,9 @@ public class ScheduledTransactionController {
 
    public TextField getDescriptonField() {
       return descriptonField;
+   }
+
+   public DatePicker getDatePicker() {
+      return datePicker;
    }
 }

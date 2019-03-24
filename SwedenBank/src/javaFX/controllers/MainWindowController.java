@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import models.BankAccount;
+import models.ScheduledTransaction;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -371,13 +372,17 @@ public class MainWindowController {
       ScheduledTransactionController controller = fxmlLoader.getController();
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-
+         if (!controller.validateScheduledTransaction()) {
+            event.consume();
+         }
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
 
       if (result.isPresent() && result.get() == ButtonType.OK) {
-
+         ScheduledTransaction transaction = controller.processResults();
+         swedenBankDatasource.insertIntoTable(transaction);
       }
    }
+
 }

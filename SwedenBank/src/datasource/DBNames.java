@@ -44,6 +44,15 @@ public class DBNames {
    public static final String COLUMN_TRANSACTIONS_TIMESTAMP = "happened_on";
    public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
 
+   public static final String TABLE_SCHEDULED_TRANSACTIONS = "scheduled_transactions";
+
+   public static final String COLUMN_SCHEDULED_TRANS_ID = "id";
+   public static final String COLUMN_SCHEDULED_TRANS_SENDER = "sender_account_nr";
+   public static final String COLUMN_SCHEDULED_TRANS_RECEIVER = "receiver_account_nr";
+   public static final String COLUMN_SCHEDULED_EVENT_DESC = "description";
+   public static final String COLUMN_SCHEDULED_EVENT_DATE = "transaction_date";
+   public static final String COLUMN_SCHEDULED_TRANS_AMOUNT = "amount";
+
    public static final String PROCEDURE_TRANSFER_MONEY = "transfer_money";
 
    public static final String CREATE_TRANSFER_MONEY_PROCEDURE = "" +
