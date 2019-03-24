@@ -1,4 +1,4 @@
-package datasource;
+package datasource.sql;
 
 public class DBNames {
 
@@ -55,55 +55,8 @@ public class DBNames {
 
    public static final String PROCEDURE_TRANSFER_MONEY = "transfer_money";
 
-   public static final String CREATE_TRANSFER_MONEY_PROCEDURE = "" +
-           "CREATE PROCEDURE " + PROCEDURE_TRANSFER_MONEY +
-           "(sender VARCHAR(50), receiver VARCHAR(50), amount DECIMAL, description VARCHAR(250))\n" +
-           "BEGIN\n" +
-           "\tIF EXISTS(SELECT 1 FROM " + TABLE_ACCOUNTS +
-           " WHERE " + COLUMN_ACCOUNTS_NUMBER + " = receiver OR " + COLUMN_ACCOUNTS_NUMBER + " = sender) THEN\n" +
-           "\t\tUPDATE accounts SET " + COLUMN_ACCOUNTS_BALANCE + " = " + COLUMN_ACCOUNTS_BALANCE + " + amount " +
-           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = receiver;\n" +
-           "\t\tUPDATE accounts SET " + COLUMN_ACCOUNTS_BALANCE + " = " + COLUMN_ACCOUNTS_BALANCE + " - amount " +
-           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = sender;\n" +
-           "\t\tINSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_TRANSACTIONS_SENDER + ", " + COLUMN_TRANSACTIONS_RECEIVER +
-           ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " + COLUMN_TRANSACTIONS_DESC + ")\n" +
-           "VALUES(sender, receiver, amount, description); \n" +
-           "\tEND IF;\n" +
-           "END;\n" +
-           "";
+
 
    public static final String SCHEDULED_TRANSACTIONS_EVENT = "perform_scheduled_transactions";
 
-   public static final String CREATE_SCHEDULED_TRANSACTIONS_EVENT = "CREATE EVENT " + SCHEDULED_TRANSACTIONS_EVENT + "\n" +
-           "ON SCHEDULE EVERY 1 DAY\n" +
-           "ON COMPLETION PRESERVE\n" +
-           "DO\n" +
-           "BEGIN\n" +
-           "DECLARE sender_var VARCHAR(30);\n" +
-           "DECLARE receiver_var VARCHAR(30);\n" +
-           "DECLARE description_var VARCHAR(250);\n" +
-           "DECLARE amount_var DOUBLE(10,2);\n" +
-           "\nDECLARE finished INT DEFAULT 0;\n" +
-           "\nDECLARE cur CURSOR FOR SELECT " + COLUMN_SCHEDULED_TRANS_SENDER + ", " +
-           COLUMN_SCHEDULED_TRANS_RECEIVER + ", " +
-           COLUMN_SCHEDULED_TRANS_DESC + ", " + COLUMN_SCHEDULED_TRANS_AMOUNT + " " +
-           "\n\t\tFROM " + TABLE_SCHEDULED_TRANSACTIONS + "\n" +
-           "\t\tWHERE " + COLUMN_SCHEDULED_TRANS_DATE + " = CURDATE();\n" +
-           "\nDECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;\n" +
-           "\nOPEN cur;\n" +
-           "\ntransactionLoop :\n" +
-           "\tLOOP\n" +
-           "\t\tFETCH cur INTO sender_var, receiver_var, description_var, amount_var;\n" +
-           "\n\t\tIF finished = 1 THEN\n" +
-           "\t\t\tLEAVE transactionLoop;\n" +
-           "\t\tEND IF;\n" +
-           "\n\t\tIF EXISTS(SELECT 1 FROM " + TABLE_ACCOUNTS + " " +
-           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = receiver_var AND balance - amount_var >= 0) THEN\n" +
-           "\n\t\t\tIF EXISTS(SELECT 1 FROM " + TABLE_ACCOUNTS + " " +
-           "WHERE " + COLUMN_ACCOUNTS_NUMBER + " = sender_var) THEN\n" +
-           "\t\t\t\tCALL " + PROCEDURE_TRANSFER_MONEY + "(sender_var, receiver_var, amount_var, description_var);\n" + "" +
-           "\t\t\tEND IF;\n" +
-           "\t\tEND IF;\n" +
-           "\n\tEND LOOP;\n" +
-           "\nEND;";
 }

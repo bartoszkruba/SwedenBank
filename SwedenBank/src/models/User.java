@@ -1,6 +1,6 @@
 package models;
 
-import datasource.DBNames;
+import datasource.sql.DBNames;
 import datasource.annotations.Column;
 import datasource.annotations.KeyDescription;
 import datasource.annotations.Table;

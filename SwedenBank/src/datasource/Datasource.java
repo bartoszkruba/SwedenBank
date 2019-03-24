@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Datasource {
+public abstract class Datasource {
 
    protected Connection conn;
 

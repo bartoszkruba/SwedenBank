@@ -1,5 +1,7 @@
 package datasource;
 
+import datasource.sql.DBNames;
+import datasource.sql.SQLCode;
 import models.Address;
 import models.BankAccount;
 import models.Transaction;
@@ -13,56 +15,6 @@ public class SwedenBankDatasource extends Datasource {
 
    private static SwedenBankDatasource instance;
 
-   private final String QUERY_USER = "SELECT * FROM " + DBNames.TABLE_USERS +
-           " WHERE " + DBNames.COLUMN_USERS_PERSON_NR + "=? AND " +
-           DBNames.COLUMN_USERS_PASSWORD + " = ?";
-
-   private final String QUERY_ACCOUNTS_FOR_USER = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS +
-           " WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ?";
-
-   private final String QUERY_TEN_TRANSACTIONS = "SELECT * FROM " + DBNames.TABLE_TRANSACTIONS +
-           " WHERE " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = ? OR " +
-           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? " +
-           "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
-
-   private final String QUERY_ALL_TRANSACTIONS = "SELECT * FROM " + DBNames.TABLE_TRANSACTIONS +
-           " WHERE " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = ? OR " +
-           DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = ? " +
-           "ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC";
-
-   private final String QUERY_ACCOUNT_BALANCE = "SELECT " + DBNames.COLUMN_ACCOUNTS_BALANCE +
-           " FROM " + DBNames.TABLE_ACCOUNTS +
-           " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
-
-   private final String CALL_PROCEDURE_TRANSFER_MONEY = "CALL " + DBNames.PROCEDURE_TRANSFER_MONEY + "(?, ?, ?, ?)";
-
-   private final String QUERY_ACCOUNT_ON_NAME = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS + " " +
-           "WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? AND " +
-           DBNames.COLUMN_ACCOUNTS_NAME + " = ?";
-
-   private final String DELETE_ACCOUNT = "DELETE FROM " + DBNames.TABLE_ACCOUNTS + " " +
-           "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
-
-   private final String UPDATE_ACCOUNT = "UPDATE " + DBNames.TABLE_ACCOUNTS + " " +
-           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNT_SAVING_ACC + " = ?, " +
-           DBNames.COLUMN_ACCOUNT_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNT_SALARY_ACC + " = ? " +
-           "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
-
-   private final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +
-           "WHERE " + DBNames.COLUMN_ADRS_ID + " = ?";
-
-   private final String QUERY_TEN_TRANSACTIONS_FOR_USER = "SELECT " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " +
-           DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_DESC + ", " +
-           DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
-           "FROM " + DBNames.TABLE_USERS + " AS u " + " " +
-           "INNER JOIN " + DBNames.TABLE_ACCOUNTS + " AS a " + " ON a." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = u." + DBNames.COLUMN_USERS_PERSON_NR + " " +
-           "INNER JOIN " + DBNames.TABLE_TRANSACTIONS + " AS t " + " ON t." + DBNames.COLUMN_TRANSACTIONS_SENDER + " = a." +
-           DBNames.COLUMN_ACCOUNTS_NUMBER + " OR t." + DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = a." + DBNames.COLUMN_ACCOUNTS_NUMBER + " " +
-           "WHERE " + DBNames.COLUMN_USERS_PERSON_NR + " = ? " +
-           "GROUP BY " + DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " + " " +
-           DBNames.COLUMN_TRANSACTIONS_DESC + ", " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
-           "HAVING COUNT(*) = 1 ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
-
    private PreparedStatement queryUser;
    private PreparedStatement queryAccountsForUser;
    private PreparedStatement queryTenTransactions;
@@ -73,12 +25,11 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryTenTransactionsForUser;
 
    private PreparedStatement deleteAccount;
+   private PreparedStatement removeFuruteScheduledTransactions;
 
    private PreparedStatement updateAccount;
 
    private PreparedStatement callProcedureTransfer_money;
-
-   private PreparedStatement dropScheduledTransactionsEvent;
 
    private ObjectMapper<User> userObjectMapper;
    private ObjectMapper<Address> addressObjectMapper;
@@ -103,20 +54,21 @@ public class SwedenBankDatasource extends Datasource {
    public boolean openConnection(String connectionString, String login, String password) {
       super.openConnection(connectionString, login, password);
       try {
-         queryUser = conn.prepareStatement(QUERY_USER);
-         queryAccountsForUser = conn.prepareStatement(QUERY_ACCOUNTS_FOR_USER);
-         queryTenTransactions = conn.prepareStatement(QUERY_TEN_TRANSACTIONS);
-         queryAccountBalance = conn.prepareStatement(QUERY_ACCOUNT_BALANCE);
-         queryAllTransactions = conn.prepareStatement(QUERY_ALL_TRANSACTIONS);
-         queryAccountOnName = conn.prepareStatement(QUERY_ACCOUNT_ON_NAME);
-         queryAddress = conn.prepareStatement(QUERY_ADDRESS);
-         queryTenTransactionsForUser = conn.prepareStatement(QUERY_TEN_TRANSACTIONS_FOR_USER);
+         queryUser = conn.prepareStatement(SQLCode.QUERY_USER);
+         queryAccountsForUser = conn.prepareStatement(SQLCode.QUERY_ACCOUNTS_FOR_USER);
+         queryTenTransactions = conn.prepareStatement(SQLCode.QUERY_TEN_TRANSACTIONS);
+         queryAccountBalance = conn.prepareStatement(SQLCode.QUERY_ACCOUNT_BALANCE);
+         queryAllTransactions = conn.prepareStatement(SQLCode.QUERY_ALL_TRANSACTIONS);
+         queryAccountOnName = conn.prepareStatement(SQLCode.QUERY_ACCOUNT_ON_NAME);
+         queryAddress = conn.prepareStatement(SQLCode.QUERY_ADDRESS);
+         queryTenTransactionsForUser = conn.prepareStatement(SQLCode.QUERY_TEN_TRANSACTIONS_FOR_USER);
 
-         deleteAccount = conn.prepareStatement(DELETE_ACCOUNT);
+         deleteAccount = conn.prepareStatement(SQLCode.DELETE_ACCOUNT);
+         removeFuruteScheduledTransactions = conn.prepareStatement(SQLCode.REMOVE_FUTURE_SCHEDULED_TRANSACTIONS);
 
-         updateAccount = conn.prepareStatement(UPDATE_ACCOUNT);
+         updateAccount = conn.prepareStatement(SQLCode.UPDATE_ACCOUNT);
 
-         callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
+         callProcedureTransfer_money = conn.prepareStatement(SQLCode.CALL_PROCEDURE_TRANSFER_MONEY);
 
          return true;
       } catch (SQLException e) {
@@ -139,6 +91,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(updateAccount);
          closeStatement(queryAddress);
          closeStatement(queryTenTransactionsForUser);
+         closeStatement(removeFuruteScheduledTransactions);
 
          super.closeConnection();
          return true;
@@ -235,9 +188,9 @@ public class SwedenBankDatasource extends Datasource {
 
    public void createProcedureTransfer_money() {
       try {
-         System.out.println(DBNames.CREATE_TRANSFER_MONEY_PROCEDURE);
+         System.out.println(SQLCode.CREATE_TRANSFER_MONEY_PROCEDURE);
          Statement statement = conn.createStatement();
-         statement.executeUpdate(DBNames.CREATE_TRANSFER_MONEY_PROCEDURE);
+         statement.executeUpdate(SQLCode.CREATE_TRANSFER_MONEY_PROCEDURE);
       } catch (SQLException e) {
          System.out.println("Couldn't create procedure: " + e.getMessage());
       }
@@ -256,9 +209,9 @@ public class SwedenBankDatasource extends Datasource {
 
    public void createScheduledTransactionsEvent() {
       try {
-         System.out.println(DBNames.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
+         System.out.println(SQLCode.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
          Statement statement = conn.createStatement();
-         statement.executeUpdate(DBNames.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
+         statement.executeUpdate(SQLCode.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
       } catch (SQLException e) {
          System.out.println("Couldn't create event: " + e.getMessage());
       }
@@ -376,6 +329,9 @@ public class SwedenBankDatasource extends Datasource {
             System.out.println("Uptade failed. Deleted rows: " + affectedRows);
          }
 
+         removeFuruteScheduledTransactions.setString(1, accountNr);
+         removeFuruteScheduledTransactions.executeUpdate();
+
          try {
             conn.setAutoCommit(true);
          } catch (SQLException e) {
@@ -404,9 +360,12 @@ public class SwedenBankDatasource extends Datasource {
    public void updateAccount(String accountNumber, String accountName, boolean savingAccount,
                              boolean cardAccount, boolean salaryAccount) {
       try {
+         conn.setAutoCommit(false);
          updateAccount.setString(1, accountName);
          if (savingAccount) {
             updateAccount.setString(2, "Y");
+            removeFuruteScheduledTransactions.setString(1, accountNumber);
+            removeFuruteScheduledTransactions.executeUpdate();
          } else {
             updateAccount.setString(2, "N");
          }
@@ -426,9 +385,21 @@ public class SwedenBankDatasource extends Datasource {
          updateAccount.setString(5, accountNumber);
 
          updateAccount.executeUpdate();
-
+         conn.commit();
       } catch (SQLException e) {
          System.out.println("Couldn't update account: " + e.getMessage());
+         try {
+            conn.rollback();
+         } catch (SQLException e1) {
+            System.out.println("Couldn't rollback: " + e1.getMessage());
+            e1.printStackTrace();
+         }
+      }
+
+      try {
+         conn.setAutoCommit(true);
+      } catch (SQLException e) {
+         System.out.println("Couldn't set autocommit to true: " + e.getMessage());
       }
    }
 

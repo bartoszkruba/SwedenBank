@@ -1,6 +1,8 @@
 package javaFX.controllers.dialogs;
 
+import datasource.SwedenBankDatasource;
 import javaFX.State;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -75,6 +77,34 @@ public class NewTransactionController {
       });
 
       accountChoiceBox.setPrefWidth(500);
+   }
+
+   public boolean validateNewTransaction() {
+      accountError.setVisible(false);
+      moneyError.setVisible(false);
+
+      if (amountField.getText().equals("")) {
+         return false;
+      }
+
+      double amount = Double.parseDouble(amountField.getText());
+      String receiver = accountNumberField.getText();
+
+      try {
+         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(receiver);
+         if (amount > balance) {
+            Platform.runLater(() -> moneyError.setVisible(true));
+            System.out.println("not enough money");
+            return false;
+         }
+      } catch (IllegalStateException e) {
+         Platform.runLater(() -> accountError.setVisible(true));
+         return false;
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+
+      return true;
    }
 
    public TextField getAmountField() {

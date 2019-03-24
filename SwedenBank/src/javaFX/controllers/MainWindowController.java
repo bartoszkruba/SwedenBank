@@ -87,8 +87,7 @@ public class MainWindowController {
       NewTransactionController controller = fxmlLoader.getController();
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-         if (validateNewTransaction(controller)) {
-         } else {
+         if (!controller.validateNewTransaction()) {
             event.consume();
          }
       });
@@ -108,34 +107,6 @@ public class MainWindowController {
             Platform.runLater(() -> state.getAccountsTabController().loadAccounts());
          }).start();
       }
-   }
-
-   private boolean validateNewTransaction(NewTransactionController controller) {
-      controller.getAccountError().setVisible(false);
-      controller.getMoneyError().setVisible(false);
-
-      if (controller.getAmountField().getText().equals("")) {
-         return false;
-      }
-
-      double amount = Double.parseDouble(controller.getAmountField().getText());
-      String receiver = controller.getAccountNumberField().getText();
-
-      try {
-         double balance = swedenBankDatasource.queryAccountBalance(receiver);
-         if (amount > balance) {
-            Platform.runLater(() -> controller.getMoneyError().setVisible(true));
-            System.out.println("not enough money");
-            return false;
-         }
-      } catch (IllegalStateException e) {
-         Platform.runLater(() -> controller.getAccountError().setVisible(true));
-         return false;
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-
-      return true;
    }
 
    @FXML
@@ -162,7 +133,7 @@ public class MainWindowController {
       NewAccountController controller = fxmlLoader.getController();
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-         if (!validateNewAccount(controller)) {
+         if (!controller.validateNewAccount()) {
             event.consume();
          }
       });
@@ -180,29 +151,6 @@ public class MainWindowController {
       }
 
    }
-
-   private boolean validateNewAccount(NewAccountController controller) {
-      controller.getAccountNameError().setVisible(false);
-      controller.getConnectionError().setVisible(false);
-
-      String name = controller.getAccountNameTextField().getText();
-      String personNumber = state.getUser().getPersonNr();
-
-      if (name.equals("")) return false;
-
-      try {
-         BankAccount account = swedenBankDatasource.queryAccountOnName(personNumber, name);
-         if (account != null) {
-            controller.getAccountNameError().setVisible(true);
-            return false;
-         }
-         return true;
-      } catch (Exception e) {
-         controller.getConnectionError().setVisible(true);
-         return false;
-      }
-   }
-
 
    public void showDeleteAccountDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();

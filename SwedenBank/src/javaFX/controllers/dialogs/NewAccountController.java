@@ -59,6 +59,28 @@ public class NewAccountController {
       return account;
    }
 
+   public boolean validateNewAccount() {
+      accountNameError.setVisible(false);
+      connectionError.setVisible(false);
+
+      String name = accountNameTextField.getText();
+      String personNumber = State.getInstance().getUser().getPersonNr();
+
+      if (name.equals("")) return false;
+
+      try {
+         BankAccount account = SwedenBankDatasource.getInstance().queryAccountOnName(personNumber, name);
+         if (account != null) {
+            accountNameError.setVisible(true);
+            return false;
+         }
+         return true;
+      } catch (Exception e) {
+         connectionError.setVisible(true);
+         return false;
+      }
+   }
+
    @FXML
    private void savingAccountSelected() {
       if (savingAccountCheckBox.isSelected()) {

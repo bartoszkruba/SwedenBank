@@ -1,5 +1,6 @@
 package datasource;
 
+import datasource.sql.DBNames;
 import models.*;
 
 public class InsertData {
@@ -11,6 +12,7 @@ public class InsertData {
       swedenBankDatasource.openConnection(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
 
       swedenBankDatasource.dropProcedureTransfer_money();
+      swedenBankDatasource.dropScheduledTransactionsEvent();
 
       swedenBankDatasource.dropTable(ScheduledTransaction.class);
       swedenBankDatasource.dropTable(Transaction.class);
