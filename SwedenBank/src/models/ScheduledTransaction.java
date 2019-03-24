@@ -25,11 +25,11 @@ public class ScheduledTransaction {
    @KeyDescription("VARCHAR(30) NOT NULL")
    private String receiverAccountNumber;
 
-   @Column(DBNames.COLUMN_SCHEDULED_EVENT_DESC)
+   @Column(DBNames.COLUMN_SCHEDULED_TRANS_DESC)
    @KeyDescription("VARCHAR(250) NOT NULL DEFAULT 'No Description'")
    private String description;
 
-   @Column(DBNames.COLUMN_SCHEDULED_EVENT_DATE)
+   @Column(DBNames.COLUMN_SCHEDULED_TRANS_DATE)
    @KeyDescription("DATE NOT NULL")
    private Date date;
 

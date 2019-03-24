@@ -12,12 +12,17 @@ public class InsertData {
 
       swedenBankDatasource.dropProcedureTransfer_money();
 
+      swedenBankDatasource.dropTable(ScheduledTransaction.class);
       swedenBankDatasource.dropTable(Transaction.class);
       swedenBankDatasource.dropTable(BankAccount.class);
       swedenBankDatasource.dropTable(User.class);
       swedenBankDatasource.dropTable(Address.class);
 
       swedenBankDatasource.turnOnScheduledEvents();
+
+      swedenBankDatasource.dropScheduledTransactionsEvent();
+
+      swedenBankDatasource.createScheduledTransactionsEvent();
 
       swedenBankDatasource.createProcedureTransfer_money();
 
@@ -45,7 +50,6 @@ public class InsertData {
 
       swedenBankDatasource.insertIntoTable(address);
       swedenBankDatasource.insertIntoTable(user);
-
 
       BankAccount account = new BankAccount();
 

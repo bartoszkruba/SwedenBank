@@ -129,7 +129,6 @@ public class ScheduledTransactionController {
          double balance = SwedenBankDatasource.getInstance().queryAccountBalance(receiver);
          if (amount > balance) {
             Platform.runLater(() -> moneyError.setVisible(true));
-            System.out.println("not enough money");
             return false;
          }
       } catch (IllegalStateException e) {

@@ -78,6 +78,8 @@ public class SwedenBankDatasource extends Datasource {
 
    private PreparedStatement callProcedureTransfer_money;
 
+   private PreparedStatement dropScheduledTransactionsEvent;
+
    private ObjectMapper<User> userObjectMapper;
    private ObjectMapper<Address> addressObjectMapper;
    private ObjectMapper<BankAccount> accountObjectMapper;
@@ -115,6 +117,7 @@ public class SwedenBankDatasource extends Datasource {
          updateAccount = conn.prepareStatement(UPDATE_ACCOUNT);
 
          callProcedureTransfer_money = conn.prepareStatement(CALL_PROCEDURE_TRANSFER_MONEY);
+
          return true;
       } catch (SQLException e) {
          System.out.println("Couldn't open connection: " + e.getMessage());
@@ -240,6 +243,7 @@ public class SwedenBankDatasource extends Datasource {
       }
    }
 
+
    public void dropProcedureTransfer_money() {
       try {
          Statement statement = conn.createStatement();
@@ -247,6 +251,25 @@ public class SwedenBankDatasource extends Datasource {
          statement.executeUpdate(sql);
       } catch (SQLException e) {
          System.out.println("Couldn't drop procedure: " + e.getMessage());
+      }
+   }
+
+   public void createScheduledTransactionsEvent() {
+      try {
+         System.out.println(DBNames.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
+         Statement statement = conn.createStatement();
+         statement.executeUpdate(DBNames.CREATE_SCHEDULED_TRANSACTIONS_EVENT);
+      } catch (SQLException e) {
+         System.out.println("Couldn't create event: " + e.getMessage());
+      }
+   }
+
+   public void dropScheduledTransactionsEvent() {
+      try {
+         Statement statement = conn.createStatement();
+         statement.executeUpdate("DROP EVENT IF EXISTS " + DBNames.SCHEDULED_TRANSACTIONS_EVENT);
+      } catch (SQLException e) {
+         System.out.println("Couldn't drop event: " + e.getMessage());
       }
    }
 
