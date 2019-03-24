@@ -32,6 +32,9 @@ public class MainWindowController {
    @FXML
    Tab overviewTab;
 
+   @FXML
+   Tab scheduledTransationsTab;
+
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
 
@@ -54,6 +57,8 @@ public class MainWindowController {
          BorderPane accounts = FXMLLoader.load(getClass().getResource("../views/tabs/AccountsTab.fxml"));
          accountsTab.setContent(accounts);
 
+         BorderPane transactions = FXMLLoader.load(getClass().getResource("../views/tabs/ScheduledTransactionsTab.fxml"));
+         scheduledTransationsTab.setContent(transactions);
       } catch (IOException e) {
          System.out.println("Couldn't load view: " + e.getMessage());
       }

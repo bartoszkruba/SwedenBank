@@ -36,6 +36,7 @@
         <TabPane fx:id="tabPane">
             <Tab fx:id="overviewTab" text="Overview" closable="false"/>
             <Tab fx:id="accountsTab" text="Your Accounts" closable="false"/>
+            <Tab fx:id="scheduledTransationsTab" text="Scheduled Transactions" closable="false"/>
         </TabPane>
     </center>
 </BorderPane>
