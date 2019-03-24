@@ -82,7 +82,7 @@ public class OverViewTabController {
          Address address = swedenBankDatasource.queryAddress(state.getUser().getAddressId());
          if (address != null) {
             Platform.runLater(() -> {
-               street.setText(address.getStreetName() + " " + address.getPostCode());
+               street.setText(address.getStreetName() + " " + address.getStreetNumber());
                city.setText(address.getCity());
                postCode.setText(address.getPostCode());
                country.setText(address.getCountry());

@@ -20,6 +20,9 @@
                     <items>
                         <MenuItem onAction="#newTransactionSelected" text="New Transaction"/>
                     </items>
+                    <items>
+                        <MenuItem onAction="#newScheduledTransactionSelected" text="New Scheduled Transaction"/>
+                    </items>
                 </Menu>
                 <Menu text="Accounts">
                     <items>

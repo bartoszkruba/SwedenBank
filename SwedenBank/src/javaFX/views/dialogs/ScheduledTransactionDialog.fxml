@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="javaFX.controllers.dialogs.ScheduledTransactionController"
+            prefHeight="400.0" prefWidth="600.0"
+            fx:id="dlg">
+    <headerText>
+        Create Scheduled New Transaction
+    </headerText>
+    <content>
+        <GridPane vgap="10" hgap="10">
+            <Label text="Account Number: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="accountNumberField"/>
+            <Label text="Account doesn't exist" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="0"
+                   fx:id="accountError" visible="false"/>
+
+            <Label text="Amount (SEK): " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="amountField"/>
+            <Label text="Not enough money" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                   fx:id="moneyError" visible="false"/>
+
+            <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="datePicker"/>
+
+            <Label text="Description: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="3" fx:id="descriptonField"/>
+
+            <Label text="Send From: " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <ChoiceBox GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="3" fx:id="accountChoiceBox"/>
+        </GridPane>
+    </content>
+
+</DialogPane>

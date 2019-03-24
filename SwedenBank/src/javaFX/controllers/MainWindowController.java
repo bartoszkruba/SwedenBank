@@ -3,10 +3,7 @@ package javaFX.controllers;
 import javaFX.Main;
 import javaFX.State;
 import datasource.SwedenBankDatasource;
-import javaFX.controllers.dialogs.DeleteAccountController;
-import javaFX.controllers.dialogs.EditAccountController;
-import javaFX.controllers.dialogs.NewAccountController;
-import javaFX.controllers.dialogs.NewTransactionController;
+import javaFX.controllers.dialogs.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -346,4 +343,41 @@ public class MainWindowController {
       }
    }
 
+   @FXML
+   private void newScheduledTransactionSelected() {
+      showScheduledTransactionDialog();
+   }
+
+   private void showScheduledTransactionDialog() {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      dialog.initOwner(mainBorderPane.getScene().getWindow());
+      dialog.setTitle("New Transaction");
+
+      FXMLLoader fxmlLoader = new FXMLLoader();
+      fxmlLoader.setLocation(getClass().getResource("../views/dialogs/ScheduledTransactionDialog.fxml"));
+      try {
+         dialog.getDialogPane().setContent(fxmlLoader.load());
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.out.println("Couldn't load the dialog: " + e.getMessage());
+         return;
+      }
+
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+      Button btnOK = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+
+      ScheduledTransactionController controller = fxmlLoader.getController();
+
+      btnOK.addEventFilter(ActionEvent.ACTION, event -> {
+
+      });
+
+      Optional<ButtonType> result = dialog.showAndWait();
+
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+
+      }
+   }
 }
