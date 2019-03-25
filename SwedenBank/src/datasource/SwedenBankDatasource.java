@@ -233,6 +233,25 @@ public class SwedenBankDatasource extends Datasource {
       }
    }
 
+   public void createFunctionCheckAccountLimit() {
+      try {
+         System.out.println(SQLCode.CREATE_FUNCTION_CHECK_ACCOUNT_LIMIT);
+         Statement statement = conn.createStatement();
+         statement.executeUpdate(SQLCode.CREATE_FUNCTION_CHECK_ACCOUNT_LIMIT);
+      } catch (SQLException e) {
+         System.out.println("Couldn't create function: " + e.getMessage());
+      }
+   }
+
+   public void dropFunctionCheckAccountLimit() {
+      try {
+         Statement statement = conn.createStatement();
+         statement.executeUpdate("DROP FUNCTION IF EXISTS " + DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT);
+      } catch (SQLException e) {
+         System.out.println("Couldn't drop function: " + e.getMessage());
+      }
+   }
+
    public void callProcedureTransfer_money(String sender, String receiver, double amount, String description) {
 
       try {
@@ -365,7 +384,7 @@ public class SwedenBankDatasource extends Datasource {
    }
 
    public void updateAccount(String accountNumber, String accountName, boolean savingAccount,
-                             boolean cardAccount, boolean salaryAccount) {
+                             boolean cardAccount, boolean salaryAccount, double accountLimit) {
       try {
          conn.setAutoCommit(false);
          updateAccount.setString(1, accountName);
@@ -389,7 +408,9 @@ public class SwedenBankDatasource extends Datasource {
             updateAccount.setString(4, "N");
          }
 
-         updateAccount.setString(5, accountNumber);
+         updateAccount.setDouble(5, accountLimit);
+
+         updateAccount.setString(6, accountNumber);
 
          updateAccount.executeUpdate();
          conn.commit();

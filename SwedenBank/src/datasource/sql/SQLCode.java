@@ -23,7 +23,8 @@ public class SQLCode {
            " FROM " + DBNames.TABLE_ACCOUNTS +
            " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
-   public static final String CALL_PROCEDURE_TRANSFER_MONEY = "CALL " + DBNames.PROCEDURE_TRANSFER_MONEY + "(?, ?, ?, ?)";
+   public static final String CALL_PROCEDURE_TRANSFER_MONEY = "CALL " +
+           DBNames.PROCEDURE_TRANSFER_MONEY + "(?, ?, ?, ?)";
 
    public static final String QUERY_ACCOUNT_ON_NAME = "SELECT * FROM " + DBNames.TABLE_ACCOUNTS + " " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? AND " +
@@ -34,7 +35,8 @@ public class SQLCode {
 
    public static final String UPDATE_ACCOUNT = "UPDATE " + DBNames.TABLE_ACCOUNTS + " " +
            "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNTS_SAVING_ACC + " = ?, " +
-           DBNames.COLUMN_ACCOUNTS_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNTS_SALARY_ACC + " = ? " +
+           DBNames.COLUMN_ACCOUNTS_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNTS_SALARY_ACC + " = ?, " +
+           DBNames.COLUMN_ACCOUNTS_LIMIT + " = ? " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    public static final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +
@@ -70,18 +72,24 @@ public class SQLCode {
            DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_DESC + ", " +
            DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
            "FROM " + DBNames.TABLE_USERS + " AS u " + " " +
-           "INNER JOIN " + DBNames.TABLE_ACCOUNTS + " AS a " + " ON a." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = u." + DBNames.COLUMN_USERS_PERSON_NR + " " +
-           "INNER JOIN " + DBNames.TABLE_TRANSACTIONS + " AS t " + " ON t." + DBNames.COLUMN_TRANSACTIONS_SENDER + " = a." +
-           DBNames.COLUMN_ACCOUNTS_NUMBER + " OR t." + DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = a." + DBNames.COLUMN_ACCOUNTS_NUMBER + " " +
+           "INNER JOIN " + DBNames.TABLE_ACCOUNTS + " AS a " + " ON a." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = u." +
+           DBNames.COLUMN_USERS_PERSON_NR + " " +
+           "INNER JOIN " + DBNames.TABLE_TRANSACTIONS + " AS t " + " ON t." +
+           DBNames.COLUMN_TRANSACTIONS_SENDER + " = a." +
+           DBNames.COLUMN_ACCOUNTS_NUMBER + " OR t." + DBNames.COLUMN_TRANSACTIONS_RECEIVER + " = a." +
+           DBNames.COLUMN_ACCOUNTS_NUMBER + " " +
            "WHERE " + DBNames.COLUMN_USERS_PERSON_NR + " = ? " +
-           "GROUP BY " + DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " + " " +
-           DBNames.COLUMN_TRANSACTIONS_DESC + ", " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
+           "GROUP BY " + DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " +
+           DBNames.COLUMN_TRANSACTIONS_DESC + ", " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " +
+           DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +
            "HAVING COUNT(*) = 1 ORDER BY " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " DESC LIMIT 10";
 
-   public static final String DELETE_SCHEDULED_TRANSACTIONS = "DELETE FROM " + DBNames.TABLE_SCHEDULED_TRANSACTIONS + " " +
+   public static final String DELETE_SCHEDULED_TRANSACTIONS = "DELETE FROM " +
+           DBNames.TABLE_SCHEDULED_TRANSACTIONS + " " +
            "WHERE " + DBNames.COLUMN_SCHEDULED_TRANS_ID + " = ?";
 
-   public static final String REMOVE_FUTURE_SCHEDULED_TRANSACTIONS = "DELETE FROM " + DBNames.TABLE_SCHEDULED_TRANSACTIONS + " " +
+   public static final String REMOVE_FUTURE_SCHEDULED_TRANSACTIONS = "DELETE FROM " +
+           DBNames.TABLE_SCHEDULED_TRANSACTIONS + " " +
            "WHERE " + DBNames.COLUMN_SCHEDULED_TRANS_SENDER + " = ? " + " " +
            "AND " + DBNames.COLUMN_SCHEDULED_TRANS_DATE + " > CURDATE()";
 
@@ -90,19 +98,24 @@ public class SQLCode {
            "(sender VARCHAR(50), receiver VARCHAR(50), amount DECIMAL, description VARCHAR(250))\n" +
            "BEGIN\n" +
            "\tIF EXISTS(SELECT 1 FROM " + DBNames.TABLE_ACCOUNTS +
-           " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = receiver OR " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = sender) THEN\n" +
-           "\t\tUPDATE accounts SET " + DBNames.COLUMN_ACCOUNTS_BALANCE + " = " + DBNames.COLUMN_ACCOUNTS_BALANCE + " + amount " +
+           " WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = receiver OR " +
+           DBNames.COLUMN_ACCOUNTS_NUMBER + " = sender) THEN\n" +
+           "\t\tUPDATE accounts SET " + DBNames.COLUMN_ACCOUNTS_BALANCE + " = " +
+           DBNames.COLUMN_ACCOUNTS_BALANCE + " + amount " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = receiver;\n" +
-           "\t\tUPDATE accounts SET " + DBNames.COLUMN_ACCOUNTS_BALANCE + " = " + DBNames.COLUMN_ACCOUNTS_BALANCE + " - amount " +
+           "\t\tUPDATE accounts SET " + DBNames.COLUMN_ACCOUNTS_BALANCE + " = " +
+           DBNames.COLUMN_ACCOUNTS_BALANCE + " - amount " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = sender;\n" +
-           "\t\tINSERT INTO " + DBNames.TABLE_TRANSACTIONS + "(" + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " + DBNames.COLUMN_TRANSACTIONS_RECEIVER +
+           "\t\tINSERT INTO " + DBNames.TABLE_TRANSACTIONS + "(" + DBNames.COLUMN_TRANSACTIONS_SENDER + ", "
+           + DBNames.COLUMN_TRANSACTIONS_RECEIVER +
            ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + ", " + DBNames.COLUMN_TRANSACTIONS_DESC + ")\n" +
            "VALUES(sender, receiver, amount, description); \n" +
            "\tEND IF;\n" +
            "END;\n" +
            "";
 
-   public static final String CREATE_SCHEDULED_TRANSACTIONS_EVENT = "CREATE EVENT " + DBNames.SCHEDULED_TRANSACTIONS_EVENT + "\n" +
+   public static final String CREATE_SCHEDULED_TRANSACTIONS_EVENT = "CREATE EVENT " +
+           DBNames.SCHEDULED_TRANSACTIONS_EVENT + "\n" +
            "ON SCHEDULE EVERY 1 DAY\n" +
            "ON COMPLETION PRESERVE\n" +
            "DO\n" +
@@ -134,4 +147,38 @@ public class SQLCode {
            "\t\tEND IF;\n" +
            "\n\tEND LOOP;\n" +
            "\nEND;";
+
+   public static final String DROP_FUNCTION_CHECK_ACCOUNT_LIMIT = "DROP FUNCTION IF EXISTS " +
+           DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT;
+
+   public static final String CREATE_FUNCTION_CHECK_ACCOUNT_LIMIT = "CREATE FUNCTION " +
+           DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT + "(accountNum VARCHAR(14), amount DOUBLE(10,2))\n" +
+           "\tRETURNS INT\n" +
+           "BEGIN\n" +
+           "\tDECLARE amountSum DOUBLE(10, 2);\n" +
+           "\tDECLARE temp DOUBLE(10, 2);\n\n" +
+           "\tDECLARE finished INT DEFAULT 0;\n\n" +
+           "\tDECLARE cur CURSOR FOR SELECT " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + "\n" +
+           "\t\tFROM " + DBNames.TABLE_TRANSACTIONS + "\n" +
+           "\t\tWHERE " + DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + " > DATE_SUB(CURDATE(), INTERVAL 7 DAY)\n" +
+           "\t\tAND " + DBNames.COLUMN_TRANSACTIONS_SENDER + " = accountNum;\n\n" +
+           "DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;\n\n" +
+           "OPEN cur;\n\n" +
+           "SET amountSum = 0;\n\n" + "" +
+           "amountLoop : \n" +
+           "\tLOOP\n" +
+           "\t\tFETCH cur INTO temp;\n\n" +
+           "\t\tIF finished = 1 THEN\n" +
+           "\t\t\tLEAVE amountLoop;\n" +
+           "\t\tEND IF;\n\n" +
+           "\t\tSET amountSum = amountSum + temp;\n\n" +
+           "\t END LOOP;\n\n" +
+           "IF EXISTS( SELECT 1 FROM " + DBNames.TABLE_ACCOUNTS + " " +
+           "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = accountNum AND " +
+           DBNames.COLUMN_ACCOUNTS_LIMIT + " >= (amountSum + amount)) THEN\n" +
+           "\tRETURN 1;\n" +
+           "ELSE\n" +
+           "\tRETURN 0;\n" +
+           "END IF;\n\n" +
+           "END;";
 }

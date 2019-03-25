@@ -293,10 +293,12 @@ public class MainWindowController {
          boolean isSavingAccount = controller.getSavingAccountCheckBox().isSelected();
          boolean isCardAccount = controller.getCardAccountCheckBox().isSelected();
          boolean isSalaryAccount = controller.getSalaryAccountCheckBox().isSelected();
+         double accountLimit = Double.parseDouble(controller.getTransactionLimit().getText());
 
          String accountNumber = state.getCurrentAccount().getAccountNumber();
 
-         swedenBankDatasource.updateAccount(accountNumber, newName, isSavingAccount, isCardAccount, isSalaryAccount);
+         swedenBankDatasource.updateAccount(
+                 accountNumber, newName, isSavingAccount, isCardAccount, isSalaryAccount, accountLimit);
 
          state.getAccountsTabController().loadAccounts();
       }

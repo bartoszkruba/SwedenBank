@@ -56,6 +56,7 @@ public class DBNames {
 
    public static final String PROCEDURE_TRANSFER_MONEY = "transfer_money";
 
+   public static final String FUNCTION_CHECK_ACCOUNT_LIMIT = "check_account_limit";
 
    public static final String SCHEDULED_TRANSACTIONS_EVENT = "perform_scheduled_transactions";
 

@@ -16,7 +16,11 @@ public class InsertData {
 
       swedenBankDatasource.openConnection(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
 
+      swedenBankDatasource.turnOnScheduledEvents();
+
       swedenBankDatasource.dropProcedureTransfer_money();
+      swedenBankDatasource.dropScheduledTransactionsEvent();
+      swedenBankDatasource.dropFunctionCheckAccountLimit();
       swedenBankDatasource.dropScheduledTransactionsEvent();
 
       swedenBankDatasource.dropTable(ScheduledTransaction.class);
@@ -25,13 +29,11 @@ public class InsertData {
       swedenBankDatasource.dropTable(User.class);
       swedenBankDatasource.dropTable(Address.class);
 
-      swedenBankDatasource.turnOnScheduledEvents();
-
-      swedenBankDatasource.dropScheduledTransactionsEvent();
-
       swedenBankDatasource.createScheduledTransactionsEvent();
 
       swedenBankDatasource.createProcedureTransfer_money();
+
+      swedenBankDatasource.createFunctionCheckAccountLimit();
 
       swedenBankDatasource.createTable(Address.class);
       swedenBankDatasource.createTable(User.class);
