@@ -17,6 +17,36 @@ public abstract class Datasource {
 
    }
 
+   public boolean createDatabase(String login, String password, String databaseName) {
+      try {
+         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost", login, password);
+
+         Statement statement = conn.createStatement();
+         statement.executeUpdate("CREATE DATABASE " + databaseName);
+
+         conn.close();
+         return true;
+      } catch (SQLException e) {
+         System.out.println("Couldn't create database: " + e.getMessage());
+         return false;
+      }
+   }
+
+   public boolean dropDatabase(String login, String password, String databaseName) {
+      try {
+         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/", login, password);
+
+         Statement statement = conn.createStatement();
+         statement.executeUpdate("DROP DATABASE IF EXISTS " + databaseName);
+
+         conn.close();
+         return true;
+      } catch (SQLException e) {
+         System.out.println("Couldn't drop database: " + e.getMessage());
+         return false;
+      }
+   }
+
    public boolean openConnection(String connectionString, String login, String password) {
       try {
          conn = DriverManager.getConnection(connectionString, login, password);

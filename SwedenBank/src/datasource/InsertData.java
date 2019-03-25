@@ -9,6 +9,11 @@ public class InsertData {
 
       SwedenBankDatasource swedenBankDatasource = SwedenBankDatasource.getInstance();
 
+      if (!(swedenBankDatasource.dropDatabase(DBNames.LOGIN, DBNames.PASSWORD, DBNames.DB_NAME)
+              && swedenBankDatasource.createDatabase(DBNames.LOGIN, DBNames.PASSWORD, DBNames.DB_NAME))) {
+         return;
+      }
+
       swedenBankDatasource.openConnection(DBNames.CONNECTION_ADDRESS, DBNames.LOGIN, DBNames.PASSWORD);
 
       swedenBankDatasource.dropProcedureTransfer_money();
@@ -75,129 +80,91 @@ public class InsertData {
       swedenBankDatasource.callProcedureTransfer_money("55554444333322", "11112222333344",
               25000.0, "Lön");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               143.50, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               15, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               243, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               87, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               192, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               13, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               432, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346789098765",
               52, "ICA Maxi");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346542398765",
               130.00, "Frisör");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      sleep();
 
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "12346765438765",
               10000.00, "Godis");
 
-      try {
-         Thread.sleep(5000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
-
       System.out.println();
+
+      sleep();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "99997777888866",
               2000.0, "Transferred from \"My Account\" to \"Saving Account\"");
 
       swedenBankDatasource.closeConnection();
-
    }
 
+   private static void sleep() {
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+   }
 }

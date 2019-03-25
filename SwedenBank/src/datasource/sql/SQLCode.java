@@ -40,6 +40,30 @@ public class SQLCode {
    public static final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +
            "WHERE " + DBNames.COLUMN_ADRS_ID + " = ?";
 
+   public static final String QUERY_TEN_SCHEDULED_TRANS = "SELECT " + DBNames.COLUMN_SCHEDULED_TRANS_DESC + ", " +
+           DBNames.COLUMN_SCHEDULED_TRANS_DATE + ", " + DBNames.COLUMN_SCHEDULED_TRANS_AMOUNT + ", " +
+           DBNames.COLUMN_ACCOUNTS_NAME + ", " + DBNames.COLUMN_SCHEDULED_TRANS_RECEIVER + " " +
+           "FROM " + DBNames.TABLE_SCHEDULED_TRANSACTIONS + " INNER JOIN " + DBNames.TABLE_ACCOUNTS + " " +
+           "ON " + DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_NUMBER + " = " +
+           DBNames.TABLE_SCHEDULED_TRANSACTIONS + "." + DBNames.COLUMN_SCHEDULED_TRANS_SENDER + " " +
+           "INNER JOIN " + DBNames.TABLE_USERS + " " +
+           "ON " + DBNames.TABLE_USERS + "." + DBNames.COLUMN_USERS_PERSON_NR + " = " +
+           DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " " +
+           "WHERE " + DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? " +
+           "ORDER BY " + DBNames.COLUMN_SCHEDULED_TRANS_DATE + " ASC LIMIT 10";
+
+   public static final String QUERY_ALL_SCHEDULED_TRANS = "SELECT " + DBNames.COLUMN_SCHEDULED_TRANS_DESC + ", " +
+           DBNames.COLUMN_SCHEDULED_TRANS_DATE + ", " + DBNames.COLUMN_SCHEDULED_TRANS_AMOUNT + ", " +
+           DBNames.COLUMN_ACCOUNTS_NAME + ", " + DBNames.COLUMN_SCHEDULED_TRANS_RECEIVER + " " +
+           "FROM " + DBNames.TABLE_SCHEDULED_TRANSACTIONS + " INNER JOIN " + DBNames.TABLE_ACCOUNTS + " " +
+           "ON " + DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_NUMBER + " = " +
+           DBNames.TABLE_SCHEDULED_TRANSACTIONS + "." + DBNames.COLUMN_SCHEDULED_TRANS_SENDER + " " +
+           "INNER JOIN " + DBNames.TABLE_USERS + " " +
+           "ON " + DBNames.TABLE_USERS + "." + DBNames.COLUMN_USERS_PERSON_NR + " = " +
+           DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " " +
+           "WHERE " + DBNames.TABLE_ACCOUNTS + "." + DBNames.COLUMN_ACCOUNTS_PERS_NR + " = ? " +
+           "ORDER BY " + DBNames.COLUMN_SCHEDULED_TRANS_DATE + " ASC";
+
    public static final String QUERY_TEN_TRANSACTIONS_FOR_USER = "SELECT " + DBNames.COLUMN_TRANSACTIONS_SENDER + ", " +
            DBNames.COLUMN_TRANSACTIONS_RECEIVER + ", " + DBNames.COLUMN_TRANSACTIONS_DESC + ", " +
            DBNames.COLUMN_TRANSACTIONS_TIMESTAMP + ", " + DBNames.COLUMN_TRANSACTIONS_AMOUNT + " " +

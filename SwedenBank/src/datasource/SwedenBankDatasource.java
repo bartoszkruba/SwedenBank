@@ -2,10 +2,7 @@ package datasource;
 
 import datasource.sql.DBNames;
 import datasource.sql.SQLCode;
-import models.Address;
-import models.BankAccount;
-import models.Transaction;
-import models.User;
+import models.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,6 +20,8 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryAccountOnName;
    private PreparedStatement queryAddress;
    private PreparedStatement queryTenTransactionsForUser;
+   private PreparedStatement queryTenScheduledTransactions;
+   private PreparedStatement queryAllScheduledTransactions;
 
    private PreparedStatement deleteAccount;
    private PreparedStatement removeFuruteScheduledTransactions;
@@ -35,6 +34,7 @@ public class SwedenBankDatasource extends Datasource {
    private ObjectMapper<Address> addressObjectMapper;
    private ObjectMapper<BankAccount> accountObjectMapper;
    private ObjectMapper<Transaction> transactionObjectMapper;
+   private ObjectMapper<TransactionView> transactionViewObjectMapper;
 
    public static SwedenBankDatasource getInstance() {
       if (instance == null) {
@@ -48,6 +48,7 @@ public class SwedenBankDatasource extends Datasource {
       addressObjectMapper = new ObjectMapper<>(Address.class);
       accountObjectMapper = new ObjectMapper<>(BankAccount.class);
       transactionObjectMapper = new ObjectMapper<>(Transaction.class);
+      transactionViewObjectMapper = new ObjectMapper<>(TransactionView.class);
    }
 
    @Override
@@ -62,6 +63,9 @@ public class SwedenBankDatasource extends Datasource {
          queryAccountOnName = conn.prepareStatement(SQLCode.QUERY_ACCOUNT_ON_NAME);
          queryAddress = conn.prepareStatement(SQLCode.QUERY_ADDRESS);
          queryTenTransactionsForUser = conn.prepareStatement(SQLCode.QUERY_TEN_TRANSACTIONS_FOR_USER);
+         queryTenScheduledTransactions = conn.prepareStatement(SQLCode.QUERY_TEN_SCHEDULED_TRANS);
+         queryAllScheduledTransactions = conn.prepareStatement(SQLCode.QUERY_ALL_SCHEDULED_TRANS);
+
 
          deleteAccount = conn.prepareStatement(SQLCode.DELETE_ACCOUNT);
          removeFuruteScheduledTransactions = conn.prepareStatement(SQLCode.REMOVE_FUTURE_SCHEDULED_TRANSACTIONS);
@@ -92,6 +96,8 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(queryAddress);
          closeStatement(queryTenTransactionsForUser);
          closeStatement(removeFuruteScheduledTransactions);
+         closeStatement(queryTenScheduledTransactions);
+         closeStatement(queryAllScheduledTransactions);
 
          super.closeConnection();
          return true;
@@ -426,6 +432,26 @@ public class SwedenBankDatasource extends Datasource {
          ResultSet results = queryTenTransactionsForUser.executeQuery();
 
          return transactionObjectMapper.map(results);
+      } catch (SQLException e) {
+         System.out.println("Couldn't query transactions: " + e.getMessage());
+         return null;
+      }
+   }
+
+   public List<TransactionView> queryTenScheduledTransactions(String personNr) {
+      try {
+         queryTenScheduledTransactions.setString(1, personNr);
+         return transactionViewObjectMapper.map(queryTenScheduledTransactions.executeQuery());
+      } catch (SQLException e) {
+         System.out.println("Couldn't query transactions: " + e.getMessage());
+         return null;
+      }
+   }
+
+   public List<TransactionView> queryAllScheduledTransactions(String personNr) {
+      try {
+         queryAllScheduledTransactions.setString(1, personNr);
+         return transactionViewObjectMapper.map(queryAllScheduledTransactions.executeQuery());
       } catch (SQLException e) {
          System.out.println("Couldn't query transactions: " + e.getMessage());
          return null;

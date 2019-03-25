@@ -200,6 +200,7 @@ public class MainWindowController {
                          description);
          Alert alert;
          if (sqlResult) {
+            state.getScheduledTransactionsController().renderTransactions();
             alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Account Deleted");
             alert.setHeaderText("Account was deleted");
@@ -335,6 +336,7 @@ public class MainWindowController {
       if (result.isPresent() && result.get() == ButtonType.OK) {
          ScheduledTransaction transaction = controller.processResults();
          swedenBankDatasource.insertIntoTable(transaction);
+         state.getScheduledTransactionsController().renderTransactions();
       }
    }
 

@@ -144,7 +144,6 @@ public class AccountsTabController {
       });
 
       accountContextMenu.getItems().add(deleteMenuItem);
-
    }
 
    private void addEditContextMenu() {
