@@ -7,6 +7,9 @@ import java.sql.Date;
 
 public class TransactionView {
 
+   @Column(DBNames.COLUMN_SCHEDULED_TRANS_ID)
+   private Long id;
+
    @Column(DBNames.COLUMN_SCHEDULED_TRANS_DESC)
    private String description;
 
@@ -66,5 +69,9 @@ public class TransactionView {
    public TransactionView setReceiver(String receiver) {
       this.receiver = receiver;
       return this;
+   }
+
+   public long getId() {
+      return id;
    }
 }

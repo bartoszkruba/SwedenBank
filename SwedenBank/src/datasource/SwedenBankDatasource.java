@@ -22,6 +22,7 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryTenTransactionsForUser;
    private PreparedStatement queryTenScheduledTransactions;
    private PreparedStatement queryAllScheduledTransactions;
+   private PreparedStatement deleteScheduledTransaction;
 
    private PreparedStatement deleteAccount;
    private PreparedStatement removeFuruteScheduledTransactions;
@@ -65,7 +66,7 @@ public class SwedenBankDatasource extends Datasource {
          queryTenTransactionsForUser = conn.prepareStatement(SQLCode.QUERY_TEN_TRANSACTIONS_FOR_USER);
          queryTenScheduledTransactions = conn.prepareStatement(SQLCode.QUERY_TEN_SCHEDULED_TRANS);
          queryAllScheduledTransactions = conn.prepareStatement(SQLCode.QUERY_ALL_SCHEDULED_TRANS);
-
+         deleteScheduledTransaction = conn.prepareStatement(SQLCode.DELETE_SCHEDULED_TRANSACTIONS);
 
          deleteAccount = conn.prepareStatement(SQLCode.DELETE_ACCOUNT);
          removeFuruteScheduledTransactions = conn.prepareStatement(SQLCode.REMOVE_FUTURE_SCHEDULED_TRANSACTIONS);
@@ -455,6 +456,15 @@ public class SwedenBankDatasource extends Datasource {
       } catch (SQLException e) {
          System.out.println("Couldn't query transactions: " + e.getMessage());
          return null;
+      }
+   }
+
+   public void deleteScheduledTransaction(long id) {
+      try {
+         deleteScheduledTransaction.setLong(1, id);
+         deleteScheduledTransaction.executeUpdate();
+      } catch (SQLException e) {
+         System.out.println("Couldn't delete transaction: " + e.getMessage());
       }
    }
 }

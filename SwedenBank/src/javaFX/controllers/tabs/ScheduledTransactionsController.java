@@ -66,7 +66,7 @@ public class ScheduledTransactionsController {
       setupContextMenu();
    }
 
-   private void setupContextMenu(){
+   private void setupContextMenu() {
       transactionContextMenu = new ContextMenu();
       addCancelToContextMenu();
 
@@ -80,7 +80,12 @@ public class ScheduledTransactionsController {
    private void addCancelToContextMenu() {
       MenuItem cancelMenuItem = new MenuItem("Cancel");
       cancelMenuItem.setOnAction(event -> {
-         System.out.println("Cancel transaction: " + transactionTableView.getSelectionModel().getSelectedItem());
+         long id =
+                 ((TransactionView) transactionTableView.getSelectionModel().getSelectedItem()).getId();
+         new Thread(() -> {
+            SwedenBankDatasource.getInstance().deleteScheduledTransaction(id);
+            renderTransactions();
+         }).start();
       });
 
       transactionContextMenu.getItems().add(cancelMenuItem);
