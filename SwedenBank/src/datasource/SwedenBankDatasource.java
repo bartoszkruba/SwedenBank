@@ -24,8 +24,10 @@ public class SwedenBankDatasource extends Datasource {
    private PreparedStatement queryAllScheduledTransactions;
    private PreparedStatement deleteScheduledTransaction;
 
+   private PreparedStatement checkAccountLimit;
+
    private PreparedStatement deleteAccount;
-   private PreparedStatement removeFuruteScheduledTransactions;
+   private PreparedStatement removeFutureScheduledTransactions;
 
    private PreparedStatement updateAccount;
 
@@ -68,8 +70,10 @@ public class SwedenBankDatasource extends Datasource {
          queryAllScheduledTransactions = conn.prepareStatement(SQLCode.QUERY_ALL_SCHEDULED_TRANS);
          deleteScheduledTransaction = conn.prepareStatement(SQLCode.DELETE_SCHEDULED_TRANSACTIONS);
 
+         checkAccountLimit = conn.prepareStatement(SQLCode.CHECK_ACCOUNT_LIMIT);
+
          deleteAccount = conn.prepareStatement(SQLCode.DELETE_ACCOUNT);
-         removeFuruteScheduledTransactions = conn.prepareStatement(SQLCode.REMOVE_FUTURE_SCHEDULED_TRANSACTIONS);
+         removeFutureScheduledTransactions = conn.prepareStatement(SQLCode.REMOVE_FUTURE_SCHEDULED_TRANSACTIONS);
 
          updateAccount = conn.prepareStatement(SQLCode.UPDATE_ACCOUNT);
 
@@ -96,7 +100,7 @@ public class SwedenBankDatasource extends Datasource {
          closeStatement(updateAccount);
          closeStatement(queryAddress);
          closeStatement(queryTenTransactionsForUser);
-         closeStatement(removeFuruteScheduledTransactions);
+         closeStatement(removeFutureScheduledTransactions);
          closeStatement(queryTenScheduledTransactions);
          closeStatement(queryAllScheduledTransactions);
 
@@ -355,8 +359,8 @@ public class SwedenBankDatasource extends Datasource {
             System.out.println("Uptade failed. Deleted rows: " + affectedRows);
          }
 
-         removeFuruteScheduledTransactions.setString(1, accountNr);
-         removeFuruteScheduledTransactions.executeUpdate();
+         removeFutureScheduledTransactions.setString(1, accountNr);
+         removeFutureScheduledTransactions.executeUpdate();
 
          try {
             conn.setAutoCommit(true);
@@ -390,8 +394,8 @@ public class SwedenBankDatasource extends Datasource {
          updateAccount.setString(1, accountName);
          if (savingAccount) {
             updateAccount.setString(2, "Y");
-            removeFuruteScheduledTransactions.setString(1, accountNumber);
-            removeFuruteScheduledTransactions.executeUpdate();
+            removeFutureScheduledTransactions.setString(1, accountNumber);
+            removeFutureScheduledTransactions.executeUpdate();
          } else {
             updateAccount.setString(2, "N");
          }
@@ -486,6 +490,24 @@ public class SwedenBankDatasource extends Datasource {
          deleteScheduledTransaction.executeUpdate();
       } catch (SQLException e) {
          System.out.println("Couldn't delete transaction: " + e.getMessage());
+      }
+   }
+
+   public boolean checkAccountLimit(String accountNumber, double amount) {
+      try {
+         checkAccountLimit.setString(1, accountNumber);
+         checkAccountLimit.setDouble(2, amount);
+
+         ResultSet result = checkAccountLimit.executeQuery();
+
+         if (result.next()) {
+            return result.getInt(1) == 1;
+         }
+
+         return false;
+      } catch (SQLException e) {
+         System.out.println("Query failed: " + e.getMessage());
+         return false;
       }
    }
 }

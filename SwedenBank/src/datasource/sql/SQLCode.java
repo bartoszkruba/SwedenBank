@@ -148,11 +148,8 @@ public class SQLCode {
            "\n\tEND LOOP;\n" +
            "\nEND;";
 
-   public static final String DROP_FUNCTION_CHECK_ACCOUNT_LIMIT = "DROP FUNCTION IF EXISTS " +
-           DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT;
-
    public static final String CREATE_FUNCTION_CHECK_ACCOUNT_LIMIT = "CREATE FUNCTION " +
-           DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT + "(accountNum VARCHAR(14), amount DOUBLE(10,2))\n" +
+           DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT + "(accountNum VARCHAR(14), transaction_amount DOUBLE(10,2))\n" +
            "\tRETURNS INT\n" +
            "BEGIN\n" +
            "\tDECLARE amountSum DOUBLE(10, 2);\n" +
@@ -175,10 +172,13 @@ public class SQLCode {
            "\t END LOOP;\n\n" +
            "IF EXISTS( SELECT 1 FROM " + DBNames.TABLE_ACCOUNTS + " " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = accountNum AND " +
-           DBNames.COLUMN_ACCOUNTS_LIMIT + " >= (amountSum + amount)) THEN\n" +
+           DBNames.COLUMN_ACCOUNTS_LIMIT + " >= (amountSum + transaction_amount)) THEN\n" +
            "\tRETURN 1;\n" +
            "ELSE\n" +
            "\tRETURN 0;\n" +
            "END IF;\n\n" +
            "END;";
+
+   public static final String CHECK_ACCOUNT_LIMIT = "SELECT " + DBNames.FUNCTION_CHECK_ACCOUNT_LIMIT +
+           "(?, ?)";
 }

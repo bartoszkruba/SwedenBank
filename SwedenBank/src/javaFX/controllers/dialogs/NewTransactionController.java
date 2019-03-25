@@ -83,18 +83,30 @@ public class NewTransactionController {
       accountError.setVisible(false);
       moneyError.setVisible(false);
 
+      BankAccount account = (BankAccount) accountChoiceBox.getSelectionModel().getSelectedItem();
+
+      if (account == null) {
+         return false;
+      }
+
       if (amountField.getText().equals("")) {
          return false;
       }
 
       double amount = Double.parseDouble(amountField.getText());
-      String receiver = accountNumberField.getText();
+      String sender = account.getAccountNumber();
 
       try {
-         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(receiver);
+         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(sender);
          if (amount > balance) {
-            Platform.runLater(() -> moneyError.setVisible(true));
-            System.out.println("not enough money");
+            moneyError.setText("Not enough money");
+            moneyError.setVisible(true);
+            return false;
+         }
+         if (!SwedenBankDatasource.getInstance().checkAccountLimit(sender, amount)) {
+            System.out.println("number: " + sender + " amount: " + amount);
+            moneyError.setText("Transaction above account limit");
+            moneyError.setVisible(true);
             return false;
          }
       } catch (IllegalStateException e) {

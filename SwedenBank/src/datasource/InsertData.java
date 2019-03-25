@@ -80,7 +80,7 @@ public class InsertData {
       System.out.println();
 
       swedenBankDatasource.callProcedureTransfer_money("55554444333322", "11112222333344",
-              25000.0, "Lön");
+              250000.0, "Lön");
 
       sleep();
 
