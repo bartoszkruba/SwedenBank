@@ -155,7 +155,7 @@ public class InsertData {
       sleep();
 
       swedenBankDatasource.callProcedureTransfer_money("11112222333344", "99997777888866",
-              2000.0, "Transferred from \"My Account\" to \"Saving Account\"");
+              2000.0, "To Savings Account");
 
       swedenBankDatasource.closeConnection();
    }

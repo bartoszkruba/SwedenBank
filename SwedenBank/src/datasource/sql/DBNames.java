@@ -30,10 +30,11 @@ public class DBNames {
    public static final String COLUMN_ACCOUNTS_NAME = "name";
    public static final String COLUMN_ACCOUNTS_PERS_NR = "user_person_nr";
    public static final String COLUMN_ACCOUNTS_BALANCE = "balance";
-   public static final String COLUMN_ACCOUNT_SAVING_ACC = "is_saving_account";
-   public static final String COLUMN_ACCOUNT_SALARY_ACC = "is_salary_account";
-   public static final String COLUMN_ACCOUNT_CARD_ACC = "is_card_account";
-   public static final String COLUMN_ACCOUNT_OPENED_ON = "opened_on";
+   public static final String COLUMN_ACCOUNTS_SAVING_ACC = "is_saving_account";
+   public static final String COLUMN_ACCOUNTS_SALARY_ACC = "is_salary_account";
+   public static final String COLUMN_ACCOUNTS_CARD_ACC = "is_card_account";
+   public static final String COLUMN_ACCOUNTS_OPENED_ON = "opened_on";
+   public static final String COLUMN_ACCOUNTS_LIMIT = "transaction_limit";
 
    public static final String TABLE_TRANSACTIONS = "transactions";
 
@@ -54,7 +55,6 @@ public class DBNames {
    public static final String COLUMN_SCHEDULED_TRANS_AMOUNT = "amount";
 
    public static final String PROCEDURE_TRANSFER_MONEY = "transfer_money";
-
 
 
    public static final String SCHEDULED_TRANSACTIONS_EVENT = "perform_scheduled_transactions";

@@ -35,6 +35,11 @@
 
             <Label text="Could not connect. Please try again" GridPane.columnIndex="0" GridPane.rowIndex="4"
                    GridPane.columnSpan="3" visible="false" fx:id="connectionError"/>
+
+            <Label text="Transaction Limit: " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" fx:id="transactionLimit"/>
+            <Label text="(SEK) / week" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+
         </GridPane>
     </content>
 

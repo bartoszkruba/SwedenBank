@@ -246,6 +246,10 @@ public class MainWindowController {
 
       String salaryAccount = state.getCurrentAccount().getSalaryAccount();
 
+      int limit = (int) state.getCurrentAccount().getLimit();
+
+      controller.getTransactionLimit().setText(Integer.toString(limit));
+
       if (savingAccount.equals("Y")) {
          controller.getSavingAccountCheckBox().setSelected(true);
       } else {

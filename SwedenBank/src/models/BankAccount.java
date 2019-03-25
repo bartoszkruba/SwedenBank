@@ -32,22 +32,25 @@ public class BankAccount {
    @KeyDescription("DOUBLE(8,2) NOT NULL DEFAULT 0")
    private Double balance;
 
-   @Column(DBNames.COLUMN_ACCOUNT_SAVING_ACC)
+   @Column(DBNames.COLUMN_ACCOUNTS_SAVING_ACC)
    @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
    private String isSavingAccount;
 
-   @Column(DBNames.COLUMN_ACCOUNT_SALARY_ACC)
+   @Column(DBNames.COLUMN_ACCOUNTS_SALARY_ACC)
    @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
    private String isSalaryAccount;
 
-   @Column(DBNames.COLUMN_ACCOUNT_CARD_ACC)
+   @Column(DBNames.COLUMN_ACCOUNTS_CARD_ACC)
    @KeyDescription("ENUM('Y', 'N') NOT NULL DEFAULT 'N'")
    private String isCardAccount;
 
-   @Column(DBNames.COLUMN_ACCOUNT_OPENED_ON)
+   @Column(DBNames.COLUMN_ACCOUNTS_OPENED_ON)
    @KeyDescription("TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP")
    private Timestamp openedOn;
 
+   @Column(DBNames.COLUMN_ACCOUNTS_LIMIT)
+   @KeyDescription("DOUBLE(10,2) UNSIGNED NOT NULL DEFAULT 30000")
+   private Double limit;
 
    public String getAccountNumber() {
       return accountNumber;
@@ -113,6 +116,15 @@ public class BankAccount {
 
    public BankAccount setCardAccount(String isCardAccount) {
       this.isCardAccount = isCardAccount;
+      return this;
+   }
+
+   public double getLimit() {
+      return limit;
+   }
+
+   public BankAccount setLimit(double limit) {
+      this.limit = limit;
       return this;
    }
 }

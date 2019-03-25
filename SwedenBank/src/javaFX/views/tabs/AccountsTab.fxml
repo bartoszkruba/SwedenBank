@@ -70,6 +70,10 @@
 
                 <Label text="Salary Account:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                 <Label GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="salaryAccount"/>
+
+                <Label text="Transaction Limit: " GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="7" fx:id="limit"/>
+
             </GridPane>
         </VBox>
     </right>

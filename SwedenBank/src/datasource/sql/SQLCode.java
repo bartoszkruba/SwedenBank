@@ -33,8 +33,8 @@ public class SQLCode {
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    public static final String UPDATE_ACCOUNT = "UPDATE " + DBNames.TABLE_ACCOUNTS + " " +
-           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNT_SAVING_ACC + " = ?, " +
-           DBNames.COLUMN_ACCOUNT_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNT_SALARY_ACC + " = ? " +
+           "SET " + DBNames.COLUMN_ACCOUNTS_NAME + " = ?, " + DBNames.COLUMN_ACCOUNTS_SAVING_ACC + " = ?, " +
+           DBNames.COLUMN_ACCOUNTS_CARD_ACC + " = ?, " + DBNames.COLUMN_ACCOUNTS_SALARY_ACC + " = ? " +
            "WHERE " + DBNames.COLUMN_ACCOUNTS_NUMBER + " = ?";
 
    public static final String QUERY_ADDRESS = "SELECT * FROM " + DBNames.TABLE_ADDRESSES + " " +

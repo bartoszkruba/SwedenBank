@@ -57,6 +57,10 @@ public class AccountsTabController {
 
    @FXML
    Label salaryAccount;
+
+   @FXML
+   Label limit;
+
    private SwedenBankDatasource swedenBankDatasource;
    private State state;
 
@@ -160,12 +164,14 @@ public class AccountsTabController {
 
       String format = "%.2f";
       String balance = String.format(format, currentAcc.getBalance()) + " (SEK)";
+      String transactionLimit = String.format(format, currentAcc.getLimit());
 
       accountNumber.setText(currentAcc.getAccountNumber());
       accountBalance.setText(balance);
       savingsAccount.setText(currentAcc.getSavingAccount().equals("Y") ? "Yes" : "No");
       cardAccount.setText(currentAcc.getCardAccount().equals("Y") ? "Yes" : "No");
       salaryAccount.setText(currentAcc.getSalaryAccount().equals("Y") ? "Yes" : "No");
+      limit.setText(transactionLimit + " (SEK) / week");
    }
 
    private void deleteAccount(BankAccount account) {

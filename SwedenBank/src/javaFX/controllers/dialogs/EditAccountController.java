@@ -1,10 +1,9 @@
 package javaFX.controllers.dialogs;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import java.util.function.UnaryOperator;
 
 public class EditAccountController {
 
@@ -25,6 +24,28 @@ public class EditAccountController {
 
    @FXML
    private Label connectionError;
+
+   @FXML
+   TextField transactionLimit;
+
+   @FXML
+   private void initialize() {
+      addFormatter();
+   }
+
+   private void addFormatter() {
+      UnaryOperator<TextFormatter.Change> filter = change -> {
+         String text = change.getText();
+
+         if (text.matches("[0-9]*")) {
+            return change;
+         }
+
+         return null;
+      };
+      TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+      transactionLimit.setTextFormatter(textFormatter);
+   }
 
    @FXML
    private void cardAccountSelected() {
@@ -62,6 +83,10 @@ public class EditAccountController {
 
    public CheckBox getSalaryAccountCheckBox() {
       return salaryAccountCheckBox;
+   }
+
+   public TextField getTransactionLimit() {
+      return transactionLimit;
    }
 }
 
