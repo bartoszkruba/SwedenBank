@@ -81,7 +81,7 @@ public class LoginController {
          try {
             Parent root = FXMLLoader.load(getClass().getResource("../views/MainWindowView.fxml"));
 
-            Main.primaryStage.setScene(new Scene(root, 1100, 700));
+            Main.primaryStage.setScene(new Scene(root, 1400, 700));
          } catch (IOException e) {
             e.printStackTrace();
          }

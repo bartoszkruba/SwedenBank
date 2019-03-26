@@ -30,6 +30,11 @@
                         <MenuItem onAction="#newAccountSelected" text="New Account"/>
                     </items>
                 </Menu>
+                <Menu text="Connection">
+                    <items>
+                        <MenuItem onAction="#logOut" text="Log Out"/>
+                    </items>
+                </Menu>
             </MenuBar>
         </VBox>
     </top>

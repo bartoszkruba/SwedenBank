@@ -55,7 +55,11 @@
 
     <center>
         <VBox alignment="TOP_CENTER">
-            <Label text="Last 10 Transactions: "/>
+            <Label text="Last 10 Transactions: ">
+                <padding>
+                    <Insets bottom="10.0" left="6.0" top="6.0"/>
+                </padding>
+            </Label>
             <TableView fx:id="transactionTableView" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="columnDescription" text="Description:"/>

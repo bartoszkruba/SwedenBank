@@ -7,6 +7,8 @@ import javaFX.controllers.dialogs.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
@@ -233,5 +235,15 @@ public class MainWindowController {
       Optional<ButtonType> result = dialog.showAndWait();
 
       controller.processScheduledTransaction(result);
+   }
+
+   @FXML
+   private void logOut() {
+      try {
+         Parent root = FXMLLoader.load(getClass().getResource("../views/LoginView.fxml"));
+         Main.primaryStage.setScene(new Scene(root, 450, 280));
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
    }
 }
