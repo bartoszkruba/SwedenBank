@@ -1,7 +1,9 @@
 package javaFX.controllers.dialogs;
 
 import datasource.SwedenBankDatasource;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -9,6 +11,8 @@ import models.BankAccount;
 
 import javaFX.State;
 import util.AccountNumberGenerator;
+
+import java.util.Optional;
 
 
 public class NewAccountController {
@@ -30,6 +34,17 @@ public class NewAccountController {
 
    @FXML
    private CheckBox salaryAccountCheckBox;
+
+   private SwedenBankDatasource swedenBankDatasource;
+
+   private State state;
+
+
+   @FXML
+   private void initialize() {
+      swedenBankDatasource = SwedenBankDatasource.getInstance();
+      state = State.getInstance();
+   }
 
    public BankAccount processResults() {
       BankAccount account = new BankAccount();
@@ -53,8 +68,8 @@ public class NewAccountController {
          account.setSalaryAccount("N");
       }
 
-      account.setPersonNumber(State.getInstance().getUser().getPersonNr())
-              .setAccountNumber(AccountNumberGenerator.generateUniqueNumber(SwedenBankDatasource.getInstance()));
+      account.setPersonNumber(state.getUser().getPersonNr())
+              .setAccountNumber(AccountNumberGenerator.generateUniqueNumber(swedenBankDatasource));
 
       return account;
    }
@@ -64,12 +79,12 @@ public class NewAccountController {
       connectionError.setVisible(false);
 
       String name = accountNameTextField.getText();
-      String personNumber = State.getInstance().getUser().getPersonNr();
+      String personNumber = state.getUser().getPersonNr();
 
       if (name.equals("")) return false;
 
       try {
-         BankAccount account = SwedenBankDatasource.getInstance().queryAccountOnName(personNumber, name);
+         BankAccount account = swedenBankDatasource.queryAccountOnName(personNumber, name);
          if (account != null) {
             accountNameError.setVisible(true);
             return false;
@@ -78,6 +93,18 @@ public class NewAccountController {
       } catch (Exception e) {
          connectionError.setVisible(true);
          return false;
+      }
+   }
+
+   public void processNewAccount(Optional<ButtonType> result) {
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+         new Thread(() -> {
+            BankAccount account = processResults();
+            swedenBankDatasource.insertIntoTable(account);
+            Platform.runLater(() -> {
+               state.getAccountsTabController().loadAccounts();
+            });
+         }).start();
       }
    }
 

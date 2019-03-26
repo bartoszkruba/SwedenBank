@@ -3,10 +3,9 @@ package javaFX;
 import javaFX.controllers.MainWindowController;
 import javaFX.controllers.tabs.AccountsTabController;
 import javaFX.controllers.tabs.OverViewTabController;
-import javaFX.controllers.tabs.ScheduledTransactionsController;
+import javaFX.controllers.tabs.ScheduledTransactionsTabController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.layout.BorderPane;
 import models.BankAccount;
 import models.Transaction;
 import models.User;
@@ -28,7 +27,7 @@ public class State {
    private MainWindowController mainWindowController;
    private AccountsTabController accountsTabController;
    private OverViewTabController overViewTabController;
-   private ScheduledTransactionsController scheduledTransactionsController;
+   private ScheduledTransactionsTabController scheduledTransactionsTabController;
 
    private State() {
       user = new User();
@@ -94,11 +93,11 @@ public class State {
       this.overViewTabController = overViewTabController;
    }
 
-   public ScheduledTransactionsController getScheduledTransactionsController() {
-      return scheduledTransactionsController;
+   public ScheduledTransactionsTabController getScheduledTransactionsTabController() {
+      return scheduledTransactionsTabController;
    }
 
-   public void setScheduledTransactionsController(ScheduledTransactionsController scheduledTransactionsController) {
-      this.scheduledTransactionsController = scheduledTransactionsController;
+   public void setScheduledTransactionsTabController(ScheduledTransactionsTabController scheduledTransactionsTabController) {
+      this.scheduledTransactionsTabController = scheduledTransactionsTabController;
    }
 }

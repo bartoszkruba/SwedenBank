@@ -4,23 +4,19 @@ import datasource.SwedenBankDatasource;
 import javaFX.State;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
-import models.BankAccount;
-import models.Transaction;
 import models.TransactionView;
 
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ScheduledTransactionsController {
+public class ScheduledTransactionsTabController {
 
    @FXML
    TableView transactionTableView;
@@ -46,10 +42,12 @@ public class ScheduledTransactionsController {
    @FXML
    ContextMenu transactionContextMenu;
 
+   private State state;
 
    @FXML
    private void initialize() {
-      State.getInstance().setScheduledTransactionsController(this);
+      state = State.getInstance();
+      state.setScheduledTransactionsTabController(this);
       setupTransactionTableView();
       renderTransactions();
    }
@@ -191,14 +189,14 @@ public class ScheduledTransactionsController {
          if (showMore_showLessBtn.getText().equals("Show Less")) {
             List<TransactionView> transactions =
                     SwedenBankDatasource.getInstance()
-                            .queryAllScheduledTransactions(javaFX.State.getInstance()
+                            .queryAllScheduledTransactions(state.getInstance()
                                     .getUser()
                                     .getPersonNr());
             return FXCollections.observableArrayList(transactions);
          } else {
             List<TransactionView> transactions =
                     SwedenBankDatasource.getInstance()
-                            .queryTenScheduledTransactions(javaFX.State.getInstance()
+                            .queryTenScheduledTransactions(state.getInstance()
                                     .getUser()
                                     .getPersonNr());
             return FXCollections.observableArrayList(transactions);

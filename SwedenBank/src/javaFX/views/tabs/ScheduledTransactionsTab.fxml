@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="javaFX.controllers.tabs.ScheduledTransactionsController"
+            fx:controller="javaFX.controllers.tabs.ScheduledTransactionsTabController"
             prefHeight="400.0" prefWidth="600.0">
 
     <padding>

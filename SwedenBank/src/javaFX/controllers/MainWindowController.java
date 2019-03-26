@@ -1,19 +1,14 @@
 package javaFX.controllers;
 
+import datasource.SwedenBankDatasource;
 import javaFX.Main;
 import javaFX.State;
-import datasource.SwedenBankDatasource;
 import javaFX.controllers.dialogs.*;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import models.BankAccount;
-import models.ScheduledTransaction;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -99,19 +94,7 @@ public class MainWindowController {
 
       Optional<ButtonType> result = dialog.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-         String receiver = controller.getAccountNumberField().getText();
-         String sender =
-                 ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber();
-         double amount = Double.parseDouble(controller.getAmountField().getText());
-         String description = controller.getDescriptonField().getText();
-
-         new Thread(() -> {
-            swedenBankDatasource.callProcedureTransfer_money(sender, receiver, amount, description);
-
-            Platform.runLater(() -> state.getAccountsTabController().loadAccounts());
-         }).start();
-      }
+      controller.processNewTransaction(result);
    }
 
    @FXML
@@ -145,16 +128,7 @@ public class MainWindowController {
 
       Optional<ButtonType> result = dialog.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-         new Thread(() -> {
-            BankAccount account = controller.processResults();
-            swedenBankDatasource.insertIntoTable(account);
-            Platform.runLater(() -> {
-               state.getAccountsTabController().loadAccounts();
-            });
-         }).start();
-      }
-
+      controller.processNewAccount(result);
    }
 
    public void showDeleteAccountDialog() {
@@ -181,39 +155,14 @@ public class MainWindowController {
 
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-         BankAccount transferAccount = (BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem();
-         if (transferAccount == null) {
-            controller.getAccountError().setVisible(true);
+         if (!controller.validateDeleteAccount()) {
             event.consume();
          }
-
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-         String description = controller.getDescriptionField().getText();
-         boolean sqlResult =
-                 swedenBankDatasource.transferMoneyAndDeleteAccount(
-                         state.getCurrentAccount().getAccountNumber(),
-                         ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber(),
-                         description);
-         Alert alert;
-         if (sqlResult) {
-            state.getScheduledTransactionsController().renderTransactions();
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Account Deleted");
-            alert.setHeaderText("Account was deleted");
-            alert.setContentText("Money transferred to " + ((BankAccount) controller.getAccountChoiceBox().getSelectionModel().getSelectedItem()).getAccountNumber());
-         } else {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Account could not be deleted");
-            alert.setContentText("Please try again");
-         }
-         alert.showAndWait();
-         state.getAccountsTabController().loadAccounts();
-      }
+      controller.processDeleteAccount(result);
    }
 
    public void showEditAccountDialog() {
@@ -238,77 +187,21 @@ public class MainWindowController {
 
       EditAccountController controller = fxmlLoader.getController();
 
-      controller.getAccountNameField().setText(state.getCurrentAccount().getName());
-
-      String savingAccount = state.getCurrentAccount().getSavingAccount();
-
-      String cardAccount = state.getCurrentAccount().getCardAccount();
-
-      String salaryAccount = state.getCurrentAccount().getSalaryAccount();
-
-      int limit = (int) state.getCurrentAccount().getLimit();
-
-      controller.getTransactionLimit().setText(Integer.toString(limit));
-
-      if (savingAccount.equals("Y")) {
-         controller.getSavingAccountCheckBox().setSelected(true);
-      } else {
-         controller.getSavingAccountCheckBox().setSelected(false);
-      }
-
-      if (cardAccount.equals("Y")) {
-         controller.getCardAccountCheckBox().setSelected(true);
-      } else {
-         controller.getCardAccountCheckBox().setSelected(false);
-      }
-
-      if (salaryAccount.equals("Y")) {
-         controller.getSalaryAccountCheckBox().setSelected(true);
-      } else {
-         controller.getSalaryAccountCheckBox().setSelected(false);
-      }
+      controller.fillUpEditAccountDialog();
 
       btnOK.addEventFilter(ActionEvent.ACTION, event -> {
-         controller.getNameError().setVisible(false);
-         controller.getConnectionError().setVisible(false);
-         String personNr = state.getUser().getPersonNr();
-         String name = controller.getAccountNameField().getText();
-         try {
-            BankAccount account = swedenBankDatasource.queryAccountOnName(personNr, name);
-            if (account != null && !name.equals(state.getCurrentAccount().getName())) {
-               controller.getNameError().setVisible(true);
-               event.consume();
-            }
-         } catch (Exception e) {
-            controller.getConnectionError().setVisible(true);
+         if (!controller.validateAccount()) {
             event.consume();
          }
       });
 
       Optional<ButtonType> result = dialog.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-         String newName = controller.getAccountNameField().getText();
-
-         boolean isSavingAccount = controller.getSavingAccountCheckBox().isSelected();
-         boolean isCardAccount = controller.getCardAccountCheckBox().isSelected();
-         boolean isSalaryAccount = controller.getSalaryAccountCheckBox().isSelected();
-         double accountLimit = Double.parseDouble(controller.getTransactionLimit().getText());
-
-         String accountNumber = state.getCurrentAccount().getAccountNumber();
-
-         swedenBankDatasource.updateAccount(
-                 accountNumber, newName, isSavingAccount, isCardAccount, isSalaryAccount, accountLimit);
-
-         state.getAccountsTabController().loadAccounts();
-      }
+      controller.processEditAccount(result);
    }
+
 
    @FXML
-   private void newScheduledTransactionSelected() {
-      showScheduledTransactionDialog();
-   }
-
    private void showScheduledTransactionDialog() {
       Dialog<ButtonType> dialog = new Dialog<>();
       dialog.initOwner(mainBorderPane.getScene().getWindow());
@@ -339,11 +232,6 @@ public class MainWindowController {
 
       Optional<ButtonType> result = dialog.showAndWait();
 
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-         ScheduledTransaction transaction = controller.processResults();
-         swedenBankDatasource.insertIntoTable(transaction);
-         state.getScheduledTransactionsController().renderTransactions();
-      }
+      controller.processScheduledTransaction(result);
    }
-
 }

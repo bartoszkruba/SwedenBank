@@ -12,7 +12,8 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="javaFX.controllers.MainWindowController"
             prefHeight="400.0" prefWidth="600.0"
-            fx:id="mainBorderPane">
+            fx:id="mainBorderPane"
+            stylesheets="@../css/style.css">
     <top>
         <VBox>
             <MenuBar>
@@ -21,7 +22,7 @@
                         <MenuItem onAction="#newTransactionSelected" text="New Transaction"/>
                     </items>
                     <items>
-                        <MenuItem onAction="#newScheduledTransactionSelected" text="New Scheduled Transaction"/>
+                        <MenuItem onAction="#showScheduledTransactionDialog" text="New Scheduled Transaction"/>
                     </items>
                 </Menu>
                 <Menu text="Accounts">

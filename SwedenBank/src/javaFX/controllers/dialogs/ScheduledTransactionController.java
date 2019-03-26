@@ -14,6 +14,7 @@ import models.ScheduledTransaction;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class ScheduledTransactionController {
@@ -37,15 +38,22 @@ public class ScheduledTransactionController {
    private Label dateError;
 
    @FXML
-   DatePicker datePicker;
+   private DatePicker datePicker;
 
    @FXML
-   TextField descriptonField;
+   private TextField descriptonField;
 
-   ObservableList<BankAccount> accounts;
+   private ObservableList<BankAccount> accounts;
+
+   private SwedenBankDatasource swedenBankDatasource;
+
+   private State state;
 
    @FXML
    private void initialize() {
+      swedenBankDatasource = SwedenBankDatasource.getInstance();
+      state = State.getInstance();
+
       addFormatter();
       setupAccountChoiceBox();
       setupDatePicker();
@@ -68,7 +76,7 @@ public class ScheduledTransactionController {
    }
 
    private void setupAccountChoiceBox() {
-      accounts = FXCollections.observableArrayList(State.getInstance().getAccounts().filtered(a -> a.getSavingAccount().equals("N")));
+      accounts = FXCollections.observableArrayList(state.getAccounts().filtered(a -> a.getSavingAccount().equals("N")));
       accountChoiceBox.setItems(accounts);
       if (!accountChoiceBox.getSelectionModel().isEmpty()) {
          accountChoiceBox.getSelectionModel().selectFirst();
@@ -126,7 +134,7 @@ public class ScheduledTransactionController {
       String receiver = accountNumberField.getText();
 
       try {
-         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(receiver);
+         double balance = swedenBankDatasource.queryAccountBalance(receiver);
          if (amount > balance) {
             Platform.runLater(() -> moneyError.setVisible(true));
             return false;
@@ -156,6 +164,14 @@ public class ScheduledTransactionController {
               .setAmount(amount);
 
       return transaction;
+   }
+
+   public void processScheduledTransaction(Optional<ButtonType> result) {
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+         ScheduledTransaction transaction = processResults();
+         swedenBankDatasource.insertIntoTable(transaction);
+         state.getScheduledTransactionsTabController().renderTransactions();
+      }
    }
 
    public TextField getAmountField() {

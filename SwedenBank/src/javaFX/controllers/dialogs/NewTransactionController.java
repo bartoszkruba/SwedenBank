@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import models.BankAccount;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class NewTransactionController {
@@ -34,8 +35,14 @@ public class NewTransactionController {
 
    ObservableList<BankAccount> accounts;
 
+   private SwedenBankDatasource swedenBankDatasource;
+
+   private State state;
+
    @FXML
    private void initialize() {
+      swedenBankDatasource = SwedenBankDatasource.getInstance();
+      state = State.getInstance();
       addFormatter();
       setupAccountChoiceBox();
    }
@@ -57,7 +64,7 @@ public class NewTransactionController {
    }
 
    private void setupAccountChoiceBox() {
-      accounts = FXCollections.observableArrayList(State.getInstance().getAccounts().filtered(a -> a.getSavingAccount().equals("N")));
+      accounts = FXCollections.observableArrayList(state.getAccounts().filtered(a -> a.getSavingAccount().equals("N")));
       accountChoiceBox.setItems(accounts);
       if (!accountChoiceBox.getSelectionModel().isEmpty()) {
          accountChoiceBox.getSelectionModel().selectFirst();
@@ -97,13 +104,13 @@ public class NewTransactionController {
       String sender = account.getAccountNumber();
 
       try {
-         double balance = SwedenBankDatasource.getInstance().queryAccountBalance(sender);
+         double balance = swedenBankDatasource.queryAccountBalance(sender);
          if (amount > balance) {
             moneyError.setText("Not enough money");
             moneyError.setVisible(true);
             return false;
          }
-         if (!SwedenBankDatasource.getInstance().checkAccountLimit(sender, amount)) {
+         if (!swedenBankDatasource.checkAccountLimit(sender, amount)) {
             System.out.println("number: " + sender + " amount: " + amount);
             moneyError.setText("Transaction above account limit");
             moneyError.setVisible(true);
@@ -117,6 +124,22 @@ public class NewTransactionController {
       }
 
       return true;
+   }
+
+   public void processNewTransaction(Optional<ButtonType> result) {
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+         String receiver = accountNumberField.getText();
+         String sender =
+                 ((BankAccount) accountChoiceBox.getSelectionModel().getSelectedItem()).getAccountNumber();
+         double amount = Double.parseDouble(amountField.getText());
+         String description = descriptonField.getText();
+
+         new Thread(() -> {
+            swedenBankDatasource.callProcedureTransfer_money(sender, receiver, amount, description);
+
+            Platform.runLater(() -> state.getAccountsTabController().loadAccounts());
+         }).start();
+      }
    }
 
    public TextField getAmountField() {
