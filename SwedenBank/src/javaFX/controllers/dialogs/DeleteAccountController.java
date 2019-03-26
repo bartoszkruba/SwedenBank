@@ -30,9 +30,9 @@ public class DeleteAccountController {
 
    @FXML
    private void initialize() {
-      setupAccountChoiceBox();
       swedenBankDatasource = SwedenBankDatasource.getInstance();
       state = State.getInstance();
+      setupAccountChoiceBox();
    }
 
 

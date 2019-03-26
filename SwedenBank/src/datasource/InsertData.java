@@ -51,7 +51,7 @@ public class InsertData {
               .setCountry("Sweden");
 
       User user = new User();
-      user.setPersonNr("111122223333")
+      user.setPersonNr("198305141212")
               .setFirstName("John")
               .setLastName("Doe")
               .setPassword("password1234")
@@ -64,7 +64,7 @@ public class InsertData {
 
       account.setAccountNumber("11112222333344")
               .setName("My Account")
-              .setPersonNumber("111122223333")
+              .setPersonNumber("198305141212")
               .setSalaryAccount("Y")
               .setCardAccount("Y");
 
@@ -72,8 +72,8 @@ public class InsertData {
 
       account = new BankAccount();
       account.setAccountNumber("99997777888866")
-              .setName("Saving Account")
-              .setPersonNumber("111122223333")
+              .setName("Savings Account")
+              .setPersonNumber("198305141212")
               .setSavingAccount("Y");
       swedenBankDatasource.insertIntoTable(account);
 

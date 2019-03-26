@@ -42,7 +42,7 @@
             <Insets left="20"/>
         </GridPane.margin>
         <Label text="Personnummer"/>
-        <TextField fx:id="personNumberField" onKeyPressed="#keyPressedOnField" text="111122223333"/>
+        <TextField fx:id="personNumberField" onKeyPressed="#keyPressedOnField" text="19830514-1212"/>
     </VBox>
     <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
         <GridPane.margin>
