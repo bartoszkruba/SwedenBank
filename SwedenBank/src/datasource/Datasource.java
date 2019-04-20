@@ -34,7 +34,7 @@ public abstract class Datasource {
 
    public boolean dropDatabase(String login, String password, String databaseName) {
       try {
-         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/", login, password);
+         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost", login, password);
 
          Statement statement = conn.createStatement();
          statement.executeUpdate("DROP DATABASE IF EXISTS " + databaseName);
